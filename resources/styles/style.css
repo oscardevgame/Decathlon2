@@ -1,0 +1,422 @@
+/*
+	Author : Ashok
+	Website : http://responsivewebinc.com/bootstrap-themes
+	********************************************
+	For Paid Support - Contact me.
+	********************************************
+*/
+		
+body{
+	font-family: 'Open Sans', sans-serif;
+}
+
+header{
+background:url('../img/back.gif') repeat;
+padding-top:20px;
+padding-bottom:20px;
+margin-bottom:20px;
+}
+
+h1{
+
+font-weight:normal;
+margin:5px 0px;
+}
+
+h2{
+
+font-weight:normal;
+margin:5px 0px;
+font-size:24px;
+}
+
+h3{
+margin:5px 0px;
+font-size:20px;
+}
+
+h4{
+
+margin:5px 0px;
+}
+
+a, a:visited{
+color:#76a812;
+}
+
+a:hover{
+color:#76a812;
+text-decoration:underline;
+}
+
+.container{
+	width:1000px;
+}
+
+
+.navbar{
+border-bottom:1px solid #aaa;
+border-top:1px solid #aaa;
+}
+
+.navbar-brand {
+	padding: 13px 20px 13px 20px;
+	
+	margin: 7px 0px 7px 10px;
+	margin-right: 50px;
+	background: #99cc33 !important;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	color: #fff !important;
+}
+
+.navbar .nav > li > a{
+float:none;
+padding:21px 20px 20px 20px;
+line-height: 19px;
+color: #666;
+font-weight:bold;
+text-shadow:none;
+font-size:14px;
+}
+
+.navbar .nav > li > a:hover{
+color:#fff;
+background-color:#99cc33 !important;
+}
+
+.navbar .nav .active > a, .navbar .nav .active > a:hover {
+background-color: #99cc33;
+color:#fff;
+}
+
+.nav-collapse .nav > li > a:hover, .nav-collapse .dropdown-menu a:hover {
+background-color:#99cc33 !important;
+color:#fff;
+}
+
+.navbar .btn-navbar {
+margin-top:15px;
+}
+
+.navbar-inner {
+min-height: 60px;
+padding-left: 20px;
+padding-right: 20px;
+background-color: #fafafa;
+background-image: -moz-linear-gradient(top, #fafafa, #eee);
+background-image: -ms-linear-gradient(top, #fafafa, #eee);
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#eee));
+background-image: -webkit-linear-gradient(top, #fafafa, #eee);
+background-image: -o-linear-gradient(top, #fafafa, #eee);
+background-image: linear-gradient(top, #fafafa, #eee);
+background-repeat: repeat-x;
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa', endColorstr='#eeeeee', GradientType=0);
+-webkit-border-radius: 0px;
+-moz-border-radius: 0px;
+border-radius: 0px;
+}
+
+.intro{
+background:#87ba20;
+padding:10px;
+color:#fff;
+font-size:15px;
+line-height:25px;
+border-radius:16px;
+}
+
+.intro h1{
+	padding:0px 15px;
+	font-size:24px;
+}
+
+.intro p{
+	line-height:30px;
+	padding:0px 15px;
+}
+
+.intro a, .intro a:visited{
+color:#fff;
+text-decoration:none;
+border-bottom:1px dotted #fff;
+}
+
+.intro a:hover{
+text-decoration:none;
+border-bottom:0px;
+}
+
+.letter p{
+	line-height:24px;
+}
+
+.letter h4{
+	font-size:15px;
+	font-weight:bold;
+}
+
+.news{
+background:#a9e335;
+padding:10px;
+color:#6c9715;
+font-size:13px;
+line-height:20px;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+margin:0px 0px 8px 0px;
+}
+
+.letter{
+padding:10px;
+background:#fafafa;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+}
+
+.news form{
+margin-top:10px;
+padding:5px;
+}
+
+.form-control{
+	margin-bottom:10px;
+	
+}
+
+.main{
+line-height:22px;
+padding:8px;
+}
+
+.main p.data{
+	line-height:28px;
+}
+
+.main p.img-data{
+	line-height:28px;
+}
+
+.main h2{
+	font-size:24px;
+	font-family: 'Open Sans', sans-serif;
+}
+
+/* About */
+
+.main h1{
+	color:#76a812;
+	font-size:25px;
+}
+
+.main h3{
+	color:#76a812;
+}
+
+.main p{
+	font-size:13px;
+	line-height:25px;	
+}
+
+/* About Ends */
+
+/* Contact */
+	
+.main form button{
+	font-weight:bold;
+}
+
+/* Map */
+
+.map iframe{
+	position:relative;
+	z-index:100;
+	width:100%;
+	margin-bottom: 10px;
+	padding-bottom:0px !important;
+}
+
+/* Contact Ends */
+
+/* 404 */
+
+.main .error-title h3{
+	text-align:center;
+	font-size:120px;
+}
+
+.main .main-para p{
+	text-align:center;
+	font-size:16px;
+	line-height:30px;
+	color:#777;
+}
+
+.main .search {
+	width:300px;
+	margin:0px auto;
+}
+
+.main form button {
+font-weight: bold;
+margin-top: -10px;
+background:#76a812;
+color:#fff;
+}
+
+.main form button:hover{
+	color:#fff;
+	background:#76a812;
+}
+	
+/* 404 Ends */
+
+/* Service */
+	
+.main .base-title h3{
+	
+	font-size:30px;
+}	
+
+.main .mainpara p{
+	font-size:15px;
+	line-height:25px;
+	color:#777;
+}
+
+.main .ser-item i{
+	color:#76a812;
+	margin-right:5px;
+}
+
+.main .ser-item h4{
+	color:#777;
+	font-size:15px;
+}
+
+.main .ser-item p{
+	font-size:13px;
+}
+
+/* Service Ends */
+
+.main img{
+margin:5px 0px;
+}
+
+.meta{
+background:#f9f9f9;
+padding:5px;
+font-size:11px;
+text-transform:uppercase;
+word-spacing:1px;
+margin-top:10px;
+padding-left:10px;
+padding-right:10px;
+}
+
+.sidebar{
+background:#99cc33;
+}
+
+.sidebar h3{
+background:#80b319;
+padding:10px 0px 10px 0px;
+font-weight:normal;
+color:#fff;
+font-size:17px;
+}
+
+.sidebar ul,.sidebar ol{
+margin-left:0px;
+padding-left:20px;
+}
+
+.sidebar a, .sidebar a:visited{
+color:#fff;
+border-bottom:1px dotted #fff;
+}
+
+.sidebar a:hover{
+border-bottom:none;
+text-decoration:none;
+}
+
+.widget p{
+	line-height:25px;
+}
+
+.widget li{
+	line-height:25px;
+}
+
+.padd{
+padding:0px 10px;
+
+
+}
+
+.widget{
+padding:8px 15px;
+color:#fff;
+font-weight:normal;
+}
+
+/* Footer */
+
+footer{
+padding:20px 5px;
+font-size:12px;
+background:#94c72e;
+color:#fff;
+margin-top:10px;
+}
+
+footer a{
+color:#e7f9c4 !important;
+}
+
+.attr{
+text-align:right;
+}
+
+/* Responsive CSS */
+
+/* Mobile phones */
+@media (max-width: 480px){
+	.intro{
+		margin-bottom:10px;
+	}
+	
+	.attr{
+		text-align:left;
+	}
+}
+
+/* Tablets */
+@media (max-width: 767px){
+	.container{
+		width:100%;
+	}
+	
+	.main .search{
+		width:80%;
+	}
+	
+	.intro{
+		margin-bottom:10px;
+	}
+	
+	
+	.main .error-title h3{
+		font-size:40px;
+	}
+}
+
+/* Desktop */
+@media (max-width: 991px){
+
+}
