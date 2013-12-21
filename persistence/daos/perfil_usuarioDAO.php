@@ -1,7 +1,7 @@
 <?php
 #########################################
 # CTASoftware                           #
-# Autor: Everton Gon�alves              #
+# Autor: Everton Goncalves              #
 # http://www.ctasoftware.com.br         #
 # E-mail: everton@ctasoftware.com.br    #
 #########################################
@@ -161,6 +161,98 @@ class perfil_usuarioDAO{
 
 		return $retorno;
 	}
+        /*
+        * Obtem por Email e Senha
+        */
+        public function ObterPorEmailESenha($email, $senha){
 
+            # Faz conex�o
+            $conexao = new conexaoBanco();
+            $conexao->conectar();
+
+            # Executa comando SQL
+            $stmt = $conexao->pdo->prepare('SELECT up.id_usuario_perfil, u.id_usuario, u.email, u.nome, u.senha, u.facebook, u.path_file_foto, p.id_perfil, p.descricao FROM perfil_usuario up, perfil p, usuarios u WHERE u.email = ? and u.senha = ?');
+            # Passando os valores a serem usados
+            $dados = array($email, $senha);
+            $stmt->execute($dados);
+            $retorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $lista = array();
+            $i = 0;
+            
+            foreach( $retorno as $row ){
+                #Instancia da entidade
+                $perfil_usuarioBE = new perfil_usuarioBE();
+                $usuariosBE = new usuariosBE();
+                $perfisBE = new perfisBE();
+                
+                #Atribui valores
+                $perfil_usuarioBE->setId_usuario_perfil($row['up.id_usuario_perfil']);
+
+                $usuariosBE->setId_usuario($row['id_usuario']);
+                $usuariosBE->setEmail($row['email']);
+                $usuariosBE->setNome($row['nome']);
+                $usuariosBE->setSenha($row['senha']);
+                $usuariosBE->setFacebook($row['facebook']);
+                $usuariosBE->setPath_file_foto($row['path_file_foto']);
+                $perfil_usuarioBE->setId_perfil($usuariosBE);
+
+                $perfisBE->setId_perfil($row['id_perfil']);
+                $perfisBE->setDescricao($row['descricao']);
+                $perfil_usuarioBE->setId_usuario($perfisBE);
+                
+                $lista[$i] = $perfil_usuarioBE;
+    		$i++;
+            }
+
+            return $lista;
+        }
+        
+        /*
+        * Obtem por Email, senha e perfil
+        */
+        public function ObterPorEmailSenhaEPerfil($email, $senha, $perfil){
+
+            # Faz conex�o
+            $conexao = new conexaoBanco();
+            $conexao->conectar();
+
+            # Executa comando SQL
+            $stmt = $conexao->pdo->prepare('SELECT up.id_usuario_perfil, u.id_usuario, u.email, u.nome, u.senha, u.facebook, u.path_file_foto, p.id_perfil, p.descricao FROM perfil_usuario up, perfil p, usuarios u WHERE u.email = ? and u.senha = ? and p.descricao = ?');
+            # Passando os valores a serem usados
+            $dados = array($email, $senha);
+            $stmt->execute($dados);
+            $retorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $lista = array();
+            $i = 0;
+            
+            foreach( $retorno as $row ){
+                #Instancia da entidade
+                $perfil_usuarioBE = new perfil_usuarioBE();
+                $usuariosBE = new usuariosBE();
+                $perfisBE = new perfisBE();
+                
+                #Atribui valores
+                $perfil_usuarioBE->setId_usuario_perfil($row['up.id_usuario_perfil']);
+
+                $usuariosBE->setId_usuario($row['id_usuario']);
+                $usuariosBE->setEmail($row['email']);
+                $usuariosBE->setNome($row['nome']);
+                $usuariosBE->setSenha($row['senha']);
+                $usuariosBE->setFacebook($row['facebook']);
+                $usuariosBE->setPath_file_foto($row['path_file_foto']);
+                $perfil_usuarioBE->setId_perfil($usuariosBE);
+
+                $perfisBE->setId_perfil($row['id_perfil']);
+                $perfisBE->setDescricao($row['descricao']);
+                $perfil_usuarioBE->setId_usuario($perfisBE);
+                
+                $lista[$i] = $perfil_usuarioBE;
+    		$i++;
+            }
+
+            return $lista;
+        }
 }
 ?>
