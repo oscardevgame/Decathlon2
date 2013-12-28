@@ -6,7 +6,7 @@
 # E-mail: everton@ctasoftware.com.br    #
 #########################################
 
-include_once 'entidades/itens_powerBE.php';
+require_once 'entidades/itens_powerBE.php';
 
 class itens_powerDAO{
 

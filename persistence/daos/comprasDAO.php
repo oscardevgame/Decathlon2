@@ -6,7 +6,7 @@
 # E-mail: everton@ctasoftware.com.br    #
 #########################################
 
-include_once 'entidades/comprasBE.php';
+require_once 'entidades/comprasBE.php';
 
 class comprasDAO{
 

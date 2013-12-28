@@ -6,7 +6,7 @@
 # E-mail: everton@ctasoftware.com.br    #
 #########################################
 
-include_once 'entidades/fansBE.php';
+require_once 'entidades/fansBE.php';
 
 class fansDAO{
 

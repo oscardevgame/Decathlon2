@@ -6,10 +6,11 @@
 # E-mail: everton@ctasoftware.com.br    #
 #########################################
 
-include_once 'entidades/usuariosBE.php';
+require_once 'conexaoBanco.php';
+require_once 'entidades/usuariosBE.php';
 
 class usuariosDAO{
-
+    
     /*
     * Altera
     * Recebe array como parametro
@@ -39,10 +40,10 @@ class usuariosDAO{
 
         try{
             $retorno = $stmt->execute();
-        }
-        catch (PDOException $e) {
-            echo 'Erro: '.$e->getMessage();
+        } catch (PDOException $e) {
+            $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("Erro: $e->getMessage()"=>"e"));
             $retorno = -1;
+            throw $e;
         }
 
         return $retorno;
@@ -60,20 +61,23 @@ class usuariosDAO{
         try{
             $stmt = $conexao->pdo->prepare('INSERT INTO usuarios (email, nome, senha, facebook, path_file_foto) VALUES (?,?,?,?,?)');
 
-
-
-			$stmt->bindValue(1,$dados->getEmail());
-			$stmt->bindValue(2,$dados->getNome());
-			$stmt->bindValue(3,$dados->getSenha());
-			$stmt->bindValue(4,$dados->getFacebook());
-			$stmt->bindValue(5,$dados->getPath_file_foto());
-
-            $retorno = $stmt->execute();
+            $stmt->bindValue(1,$dados->getEmail());
+            $stmt->bindValue(2,$dados->getNome());
+            $stmt->bindValue(3,$dados->getSenha());
+            $stmt->bindValue(4,$dados->getFacebook());
+            $stmt->bindValue(5,$dados->getPath_file_foto());
+            
+            if($stmt->execute()){
+                $retorno = $conexao->pdo->lastInsertId(); 
+            } else {
+                $message = $stmt->errorInfo();
+                $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message[2]"=>"e"));
+                return -1;
+            }
+            
+        } catch ( PDOException $ex ){ 
+            throw $ex;
         }
-        catch ( PDOException $ex ){  
-            echo 'Erro: ' . $ex->getMessage(); 
-        }
-
         return $retorno;
     }
     /*
@@ -105,6 +109,38 @@ class usuariosDAO{
 		    $usuariosBE->setSenha($row['senha']);
 		    $usuariosBE->setFacebook($row['facebook']);
 		    $usuariosBE->setPath_file_foto($row['path_file_foto']);
+    	}
+
+    	return $usuariosBE;
+    }
+    /*
+    * Obtem por Pk
+    */
+    public function ObterPorEmail($email){
+
+    	# Faz conex�o
+	    $conexao = new conexaoBanco();
+	    $conexao->conectar();
+
+	    # Executa comando SQL
+	    $stmt = $conexao->pdo->prepare('SELECT id_usuario, email, nome, senha, facebook, path_file_foto FROM usuarios WHERE email = ? ');
+
+	    # Passando os valores a serem usados
+    	$dados = array($email);
+    	$stmt->execute($dados);
+    	$retorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    	#Inst�ncia da entidade
+    	$usuariosBE = new usuariosBE();
+
+    	foreach( $retorno as $row ){
+            #Atribui valores
+            $usuariosBE->setId_usuario($row['id_usuario']);
+            $usuariosBE->setEmail($row['email']);
+            $usuariosBE->setNome($row['nome']);
+            $usuariosBE->setSenha($row['senha']);
+            $usuariosBE->setFacebook($row['facebook']);
+            $usuariosBE->setPath_file_foto($row['path_file_foto']);
     	}
 
     	return $usuariosBE;

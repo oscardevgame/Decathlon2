@@ -10,6 +10,7 @@
 * Classe conex�o DAO
 * -------------------------------------
 */
+
 class conexaoBanco{
 
 	public $pdo = NULL;
@@ -21,7 +22,10 @@ class conexaoBanco{
 		$senha = '';
 		$opcoes = array(
 			PDO::ATTR_PERSISTENT => true,
-			PDO::ATTR_CASE => PDO::CASE_LOWER
+			PDO::ATTR_CASE => PDO::CASE_LOWER,
+                        PDO::ATTR_EMULATE_PREPARES => true,
+                        PDO::ERRMODE_WARNING => true, 
+                        PDO::ERRMODE_EXCEPTION => true
 		);
 
 		try {

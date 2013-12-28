@@ -6,7 +6,7 @@
 # E-mail: everton@ctasoftware.com.br    #
 #########################################
 
-include_once 'entidades/itensBE.php';
+require_once 'entidades/itensBE.php';
 
 class itensDAO{
 

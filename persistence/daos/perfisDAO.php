@@ -6,7 +6,7 @@
 # E-mail: everton@ctasoftware.com.br    #
 #########################################
 
-include_once 'entidades/perfisBE.php';
+require_once 'entidades/perfisBE.php';
 
 class perfisDAO{
 

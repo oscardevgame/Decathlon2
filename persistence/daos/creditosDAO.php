@@ -6,7 +6,7 @@
 # E-mail: everton@ctasoftware.com.br    #
 #########################################
 
-include_once 'entidades/creditosBE.php';
+require_once 'entidades/creditosBE.php';
 
 class creditosDAO{
 
