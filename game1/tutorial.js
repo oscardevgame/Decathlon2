@@ -17,6 +17,13 @@ var playerHit = false;
 var timeOfRespawn = 0;
 var gameOver = false;
 var teclas_apoio_p1 = 0;
+var nextpos=100;
+var posjump=200;
+var jumpstat=0;
+var $trackerrec = "x100";
+var $trackerplay = "x100";
+var $tp = 1;
+var $tpx = "";
 
 // OUTRAS FUNCOES
 
@@ -99,20 +106,36 @@ $(function(){
 	var background1 = new $.gQ.Animation({imageURL: "background1.png"});
 	var background2 = new $.gQ.Animation({imageURL: "background2.png"});  
 	playerAnimation["CENTERTUTORIAL"]  = new $.gQ.Animation({imageURL: "centertutorial.png", numberOfFrame:2, delta: 60, rate: 150, type: $.gQ.ANIMATION_VERTICAL});
+	playerAnimation["CENTERTUTORIAL2"]  = new $.gQ.Animation({imageURL: "centertutorial2.png", numberOfFrame:2, delta: 64, rate: 150, type: $.gQ.ANIMATION_VERTICAL});
+	
 	// ANIMACAO DO CORREDOR
 	playerAnimation["PLAYER1CORRE"] = new $.gQ.Animation({imageURL: "competidor1.png", numberOfFrame:5, delta: 68, rate: 60, type: $.gQ.ANIMATION_VERTICAL});
 	playerAnimation["PLAYER2CORRE"] = new $.gQ.Animation({imageURL: "competidor2.png", numberOfFrame:5, delta: 68, rate: 60, type: $.gQ.ANIMATION_VERTICAL});
 
+/*--------------------------- PUXA DO BANCO DE DADOS OU SESSION CONFORME A POSSIBILIDADE -----------------------------------*/
+/*--------------------------------------------------------------------------------------------------------------------------*/
+
+    //CARREGAMENTO DAS OPCOES DO JOGADOR (CONEXAO COM A BASE E ITENS COMPRADOS NA LOJA VIRTUAL)
+    
+    var $corcamisa = 1  // 1 a 5 SUBSTITUIR PELO ITEM DA BASE DE DADOS
+    var $tipotenis = 1  // 1 a 5 SUBSTITUIR PELO ITEM DA BASE DE DADOS
+    var $tiposuplemento = 1  // 1 a 5 SUBSTITUIR PELO ITEM DA BASE DE DADOS
+    var $tipotrapaca = 2  // 1 a 5 SUBSTITUIR PELO ITEM DA BASE DE DADOS
+    var $nomejogador = "Player"; // SUBSTITUIR PELO DA BASE DE DADOS
+    var $nomejogadorcpu = "Player 2"; // SUBSTITUIR PELO DA BASE DE DADOS
+    var $usuario = "Usuario Logado;" // SUBSTITUIR PELO DA BASE DE DADOS
+	var $ultimaposicao = 1; // SUBSTITUIR PELO DA BASE DE DADOS
+	var $urlfotoplayer = "http://localdafoto/foto.png"; // SUBSTITUIR PELO DA BASE DE DADOS
+	var $cor_rgb = "255x255x255"; // SUBSTITUIR PELO DA BASE DE DADOS
+	
+/*--------------------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------------------------*/
+
 	// ITENS AMOSTRA
-	// nome jogador
-	// usuário
-	// ultima posicao
-	// foto player
-	// COR DA ROUPA // RGB 
-	playerAnimation["CORCAMISA"]  = new $.gQ.Animation({imageURL: "centertutorial.png", numberOfFrame:2, delta: 60, rate: 150, type: $.gQ.ANIMATION_VERTICAL});
-	playerAnimation["TIPOTENIS"]  = new $.gQ.Animation({imageURL: "centertutorial.png", numberOfFrame:2, delta: 60, rate: 150, type: $.gQ.ANIMATION_VERTICAL});
-    playerAnimation["TIPOSUPLEMENTO"]  = new $.gQ.Animation({imageURL: "centertutorial.png", numberOfFrame:2, delta: 60, rate: 150, type: $.gQ.ANIMATION_VERTICAL});
-    playerAnimation["TIPOTRAPACA"]  = new $.gQ.Animation({imageURL: "centertutorial.png", numberOfFrame:2, delta: 60, rate: 150, type: $.gQ.ANIMATION_VERTICAL});
+	playerAnimation["CORCAMISA"]  = new $.gQ.Animation({imageURL: "cor" + $corcamisa + ".png", numberOfFrame:5, delta: 60, rate: 150, type: $.gQ.ANIMATION_VERTICAL});
+	playerAnimation["TIPOTENIS"]  = new $.gQ.Animation({imageURL: "tipotenis" + $tipotenis + ".png", numberOfFrame:1, delta: 60, rate: 150, type: $.gQ.ANIMATION_VERTICAL});
+    playerAnimation["TIPOSUPLEMENTO"]  = new $.gQ.Animation({imageURL: "tiposuplemento" + $tiposuplemento +".png", numberOfFrame:5, delta: 60, rate: 150, type: $.gQ.ANIMATION_VERTICAL});
+    playerAnimation["TIPOTRAPACA"]  = new $.gQ.Animation({imageURL: "tipotrapaca" + $tipotrapaca + ".png", numberOfFrame:1, delta: 60, rate: 150, type: $.gQ.ANIMATION_VERTICAL});
 	// CAMPO PARA TRACKER
 
 	// OBSTACULO:
@@ -126,8 +149,12 @@ $(function(){
 	$.playground().addGroup("background", {width: PLAYGROUND_WIDTH, height: PLAYGROUND_HEIGHT})
 						.addSprite("background1", {animation: background1, width: PLAYGROUND_WIDTH, height: PLAYGROUND_HEIGHT})
 						.addSprite("background2", {animation: background2, width: PLAYGROUND_WIDTH, height: PLAYGROUND_HEIGHT, posx: PLAYGROUND_WIDTH})
-//						.addSprite("centertutorial", {animation: centertutorial, width: 64, height: 64})
-						.addSprite("centertutorial",{animation: playerAnimation["CENTERTUTORIAL"], posx: 260, posy: 10, width: 60, height: 60})
+						.addSprite("centertutorial",{animation: playerAnimation["CENTERTUTORIAL"], posx: 200, posy: 10, width: 60, height: 60})
+						.addSprite("centertutorial2",{animation: playerAnimation["CENTERTUTORIAL2"], posx: 310, posy: 10, width: 64, height: 64})
+						.addSprite("corcamisa",{animation: playerAnimation["CORCAMISA"], posx: 0, posy: 300, width: 60, height: 60})
+						.addSprite("tipotenis",{animation: playerAnimation["TIPOTENIS"], posx: 60, posy:300, width: 60, height: 60})
+						.addSprite("tiposuplemento",{animation: playerAnimation["TIPOSUPLEMENTO"], posx: 120, posy: 300, width: 60, height: 60})
+						.addSprite("tipotrapaca",{animation: playerAnimation["TIPOTRAPACA"], posx: 180, posy: 300, width: 60, height: 60})
 					.end()
 					.addGroup("actors", {width: PLAYGROUND_WIDTH, height: PLAYGROUND_HEIGHT})
 						.addGroup("player", {posx: 100, posy: 200, width: 64, height: 64})
@@ -144,7 +171,7 @@ $(function(){
 	
 	//ESTAS FUNCOES ESPECIFICAM A VIDA E A ENERGIA DO JOGADOR
 	$("#overlay").append("<div id='corredor1HUD'style='color: white; width: 100px; position: absolute; font-family: verdana, sans-serif;'></div><div id='corredor2HUD'style='color: white; width: 100px; position: absolute; right: 0px; font-family: verdana, sans-serif;'></div>")
-	
+
 	// ESTIPULA O TAMANHO DA BARRA DE CARREGAMENTO
 	$.loadCallback(function(percent){
 		$("#loadingBar").width(400*percent);
@@ -165,41 +192,79 @@ $(function(){
 			if(!playerHit){
 				$("#player")[0].player.update();
 
-				if(jQuery.gameQuery.keyTracker[37]){ // PRESSIONA BOTAO ESQUERDA(a)
+				if(jQuery.gameQuery.keyTracker[37] && jumpstat == 0){ // PRESSIONA BOTAO ESQUERDA(a)
 					teclas_apoio_p1 = 2
-				}else if(jQuery.gameQuery.keyTracker[39]){ // PRESSIONA BOTAO DIREITA(a)
+				}else if(jQuery.gameQuery.keyTracker[39] && jumpstat == 0){ // PRESSIONA BOTAO DIREITA(a)
 					teclas_apoio_p1--
 				}
 				if(teclas_apoio_p1 == 1){ // VALIDA
 					teclas_apoio_p1 = 0
-					var nextpos = $("#player").x()+5;
+					if ($tipotenis == 1 || $tipotenis == 4 || $tipotenis == 5) nextpos = $("#player").x()+5; // CASO TIPO DE TENIS = 1,4 ou 5 (NORMAL)
+					if ($tipotenis == 2) nextpos = $("#player").x()+6; // CASO TIPO DE TENIS = 2 (MAIS RAPIDO)
+					if ($tipotenis == 3) nextpos = $("#player").x()+7; // CASO TIPO DE TENIS = 3 (MUITO MAIS RAPIDO E MAIS CARO TAMBEM)
+					if ($tiposuplemento == 2) nextpos = nextpos + 2; // CASO TIPO SUPLEMENTO = 2 (ADICIONA 2 PONTOS DE VELOCIDADE INDEPENDENTE DOS OUTROS ITENS COMPRADOS)
+					if ($tiposuplemento == 3) nextpos = nextpos + 3; // CASO TIPO SUPLEMENTO = 3 (ADICIONA 3 PONTOS DE VELOCIDADE INDEPENDENTE DOS OUTROS ITENS COMPRADOS)
 					if(nextpos < PLAYGROUND_WIDTH){ // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A ESQUERDA
 						$("#player").x(nextpos);
 					}
-				}
-					
-				if(jQuery.gameQuery.keyTracker[13]){ // PLAYER 2 AUTOMATICO
-					var nextpos2 = $("#player2").x()+1;
-					if(nextpos2 < PLAYGROUND_WIDTH){ // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A DIREITA
-						$("#player2").x(nextpos2);
-					}
-				} 
-				if($("#player").x() > $("#player2").x()){
-					$("#corredor1HUD").html("Corredor 1: "+"Posicao 1 "+$("#player").x());
-					$("#corredor2HUD").html("Corredor 2: "+"Posicao 2 "+$("#player2").x());
-				}else{
-					$("#corredor1HUD").html("Corredor 1: "+"Posicao 2 "+$("#player").x());
-					$("#corredor2HUD").html("Corredor 2: "+"Posicao 1 "+$("#player2").x());
+					$trackerrec = $trackerrec + "x" + nextpos;
 				}
 				
-			
+				if(jQuery.gameQuery.keyTracker[27]){ // PLAYER 2 MANUAL
+				//if(mid($trackerplay,$tp,1)=="x"){ // PLAYER 2 AUTOMATICO
+					var nextpos2 = $("#player2").x()+1; // // POSICAO ATUAL DE PLAYER 2 - MANUAL
+					//$tp++;
+					//$tpx = "";
+					//while (mid($trackerplay,$tp,1)!="x")
+					//{
+					//	$tpx = $tpx + mid($trackerplay,$tp,1);
+					//	$tp++;
+					//}
+					
+					//var nextpos2 = val($tpx); // POSICAO ATUAL DE PLAYER 2 - AUTOMATICO					
+					
+					if(nextpos2 < PLAYGROUND_WIDTH){ // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A DIREITA (SOMENTE MANUAL)
+						$("#player2").x(nextpos2); // SOMENTE MANUAL
+					} // SOMENTE MANUAL
+				} 
+				if($("#player").x() > $("#player2").x()){
+					$("#corredor1HUD").html($nomejogador + " " +  "Posicao 1 " + " ** " +  $("#player").x() + " :: " + $trackerrec);
+					$("#corredor2HUD").html($nomejogadorcpu + " " + "Posicao 2 " + " >> " +  $("#player2").x() + " :: " + $trackerplay);
+				}else{
+					$("#corredor1HUD").html($nomejogador + " " + "Posicao 2 " + " ** " +  $("#player").x() + " :: " + $trackerrec);
+					$("#corredor2HUD").html($nomejogadorcpu + " " + "Posicao 1 " + " >> " +  $("#player2").x() + " :: " + $trackerplay);
+				}
+					
 				if($("#player").x() > PLAYGROUND_WIDTH-50){
 					gameOver = true;
 				}
 				if($("#player2").x() > PLAYGROUND_WIDTH-50){
 					gameOver = true;
 				} 	
+			}			
+//------------------------------------- LOGICA DO SALTO SOBRE AS BARREIRAS ---------------------------------------------
+			if (jQuery.gameQuery.keyTracker[13] && posjump == 200)
+			{
+				jumpstat=1;
 			}
+			if (jumpstat == 1)
+			{
+				posjump = posjump - 4; 
+				$("#player").y(posjump);
+				$trackerrec = $trackerrec + "y" + posjump;
+			}
+			if($tiposuplemento == 4) if (posjump < 140) jumpstat = 2; // CASO SUMPLEMENTO == 4 (PULOS MAIS ALTOS)
+			if($tiposuplemento == 5) if (posjump < 130) jumpstat = 2; // CASO SUMPLEMENTO == 4 (PULOS MAIS ALTOS)
+			if($tiposuplemento != 4 && $tiposuplemento != 5) if (posjump < 160) jumpstat = 2; // CASO SUMPLEMENTO == 4 (PULOS MAIS ALTOS)
+			if (jumpstat == 2)
+			{
+				posjump = posjump + 4;
+				$("#player").y(posjump);
+				$trackerrec = $trackerrec + "y" + posjump;
+			}
+			if (posjump == 200) jumpstat = 0;
+//--------------------------------------------------------------------------------------------------------------------
+
 			//ATUALIZA A COLISAO DAS BARREIRAS COM O CORREDOR
 			$(".obstaculo").each(function(){
 					this.obstaculo.update($("#player"));
@@ -208,14 +273,20 @@ $(function(){
 						$(this).remove();
 						return;
 					}
+									
 					//TESTE DE COLISOES
 					var collided = $(this).collision("#playerBody,."+$.gQ.groupCssClass);
-					if(collided.length > 0){
-						$(this).setAnimation(obstaculos[0]["explode"], function(node){$(node).remove();});
-						$(this).css("width", 210);
-						$(this).removeClass("obstaculo");
-						// E FORCADO A PERDER VELOCIDADE VOLTANDO 1 PONTO PARA ESQUERDA
-						nextpos = $("#player").x()-50;
+					if(collided.length > 0){ 
+						if (jumpstat == 0) // CASO ESTEJA PULANDO NAO QUEBRA A BARREIRA
+						{ 
+							$(this).setAnimation(obstaculos[0]["explode"], function(node){$(node).remove();});
+							$(this).css("width", 210);
+							$(this).removeClass("obstaculo");
+						}
+						// E FORCADO A PERDER VELOCIDADE VOLTANDO POSICOES PARA ESQUERDA
+						if ($tipotenis != 4 && $tipotenis != 5 && jumpstat == 0) nextpos = $("#player").x()-50; // CASO TIPO DE TENIS <> 4 (RESISTENCIA NORMAL)
+						if ($tipotenis == 4 && jumpstat == 0) nextpos = $("#player").x()-25; // CASO TIPO DE TENIS == 4 (MAIOR RESISTENCIA ESTABILIDADE)
+						if ($tipotenis == 5 && jumpstat == 0) nextpos = $("#player").x()-20; // CASO TIPO DE TENIS == 5 (SUPER RESISTENCIA A OBSTACULOS)
 						if(nextpos > 0){ // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A ESQUERDA
 							$("#player").x(nextpos);
 						}
@@ -232,8 +303,6 @@ $(function(){
 						}
 					}
 				});
-			
-
 		}
 	}, REFRESH_RATE);
 	
@@ -242,7 +311,7 @@ $(function(){
 		if(!gameOver){
 			if(Math.random() < 0.4){
 				var name = "obstaculo1_"+Math.ceil(Math.random()*1000);
-				$("#actors").addSprite(name, {animation: obstaculos[0]["idle"], posx: PLAYGROUND_WIDTH, posy: 210,width: 64, height: 64});
+				$("#actors").addSprite(name, {animation: obstaculos[0]["idle"], posx: PLAYGROUND_WIDTH, posy: 210,width: 16, height: 64});
 				$("#"+name).addClass("obstaculo");
 				$("#"+name)[0].obstaculo = new barreira($("#"+name));
 			}
