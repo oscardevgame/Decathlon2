@@ -18,6 +18,7 @@ var timeOfRespawn = 0;
 var gameOver = false;
 var teclas_apoio_p1 = 0;
 var nextpos=100;
+var nextpos2=100;
 var posjump=200;
 var jumpstat=0;
 var $trackerrec = "x100";
@@ -127,6 +128,7 @@ $(function(){
 	var $ultimaposicao = 1; // SUBSTITUIR PELO DA BASE DE DADOS
 	var $urlfotoplayer = "http://localdafoto/foto.png"; // SUBSTITUIR PELO DA BASE DE DADOS
 	var $cor_rgb = "255x255x255"; // SUBSTITUIR PELO DA BASE DE DADOS
+	var $premio = 5000; // PREMIO POR GANHAR A CORRIDA - PERDE 100 A CADA IMPACTO
 	
 /*--------------------------------------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------------------------------------------------------*/
@@ -149,8 +151,8 @@ $(function(){
 	$.playground().addGroup("background", {width: PLAYGROUND_WIDTH, height: PLAYGROUND_HEIGHT})
 						.addSprite("background1", {animation: background1, width: PLAYGROUND_WIDTH, height: PLAYGROUND_HEIGHT})
 						.addSprite("background2", {animation: background2, width: PLAYGROUND_WIDTH, height: PLAYGROUND_HEIGHT, posx: PLAYGROUND_WIDTH})
-						.addSprite("centertutorial",{animation: playerAnimation["CENTERTUTORIAL"], posx: 200, posy: 10, width: 60, height: 60})
-						.addSprite("centertutorial2",{animation: playerAnimation["CENTERTUTORIAL2"], posx: 310, posy: 10, width: 64, height: 64})
+						.addSprite("centertutorial",{animation: playerAnimation["CENTERTUTORIAL"], posx: 10, posy: 20, width: 60, height: 60})
+						.addSprite("centertutorial2",{animation: playerAnimation["CENTERTUTORIAL2"], posx: 100, posy: 20, width: 64, height: 64})
 						.addSprite("corcamisa",{animation: playerAnimation["CORCAMISA"], posx: 0, posy: 300, width: 60, height: 60})
 						.addSprite("tipotenis",{animation: playerAnimation["TIPOTENIS"], posx: 60, posy:300, width: 60, height: 60})
 						.addSprite("tiposuplemento",{animation: playerAnimation["TIPOSUPLEMENTO"], posx: 120, posy: 300, width: 60, height: 60})
@@ -169,9 +171,9 @@ $(function(){
 	
 	$("#player")[0].player = new Player($("#player"));
 	
-	//ESTAS FUNCOES ESPECIFICAM A VIDA E A ENERGIA DO JOGADOR
-	$("#overlay").append("<div id='corredor1HUD'style='color: white; width: 100px; position: absolute; font-family: verdana, sans-serif;'></div><div id='corredor2HUD'style='color: white; width: 100px; position: absolute; right: 0px; font-family: verdana, sans-serif;'></div>")
-
+	//ESTAS FUNCOES ESCREVEM NA TELA DO JOGO A VIDA A ENERGIA E OUTROS DADOS DOS CORREDORES
+	$("#overlay").append("<div id='corredor1HUD'style='color: blue; bottom: 40px; width: 100px; right : 200px; position: absolute; font-family: verdana, sans-serif;'></div><div id='corredor2HUD'style='color: red; bottom: 40px; width: 100px; position: absolute; right: 50px; font-family: verdana, sans-serif;'></div>")
+	$("#overlay").append('<div style="position: absolute; top: 0px; right: 20px; color: white; font-family: verdana, sans-serif;"><center><h1>PREMIO</h1><h1><a style="cursor: pointer; color: yellow;" id="mensagemcentral"></a></h1></center></div>');
 	// ESTIPULA O TAMANHO DA BARRA DE CARREGAMENTO
 	$.loadCallback(function(percent){
 		$("#loadingBar").width(400*percent);
@@ -228,12 +230,14 @@ $(function(){
 					} // SOMENTE MANUAL
 				} 
 				if($("#player").x() > $("#player2").x()){
-					$("#corredor1HUD").html($nomejogador + " " +  "Posicao 1 " + " ** " +  $("#player").x() + " :: " + $trackerrec);
-					$("#corredor2HUD").html($nomejogadorcpu + " " + "Posicao 2 " + " >> " +  $("#player2").x() + " :: " + $trackerplay);
+					$("#corredor1HUD").html($nomejogador + " " +  "Posicao 1 " + " ** " +  $("#player").x());
+					$("#corredor2HUD").html($nomejogadorcpu + " " + "Posicao 2 " + " >> " +  $("#player2").x());
 				}else{
-					$("#corredor1HUD").html($nomejogador + " " + "Posicao 2 " + " ** " +  $("#player").x() + " :: " + $trackerrec);
-					$("#corredor2HUD").html($nomejogadorcpu + " " + "Posicao 1 " + " >> " +  $("#player2").x() + " :: " + $trackerplay);
+					$("#corredor1HUD").html($nomejogador + " " + "Posicao 2 " + " ** " +  $("#player").x());
+					$("#corredor2HUD").html($nomejogadorcpu + " " + "Posicao 1 " + " >> " +  $("#player2").x());
 				}
+				
+				$("#mensagemcentral").html($premio);
 					
 				if($("#player").x() > PLAYGROUND_WIDTH-50){
 					gameOver = true;
@@ -249,7 +253,7 @@ $(function(){
 			}
 			if (jumpstat == 1)
 			{
-				posjump = posjump - 4; 
+				posjump = posjump - 3; 
 				$("#player").y(posjump);
 				$trackerrec = $trackerrec + "y" + posjump;
 			}
@@ -258,7 +262,7 @@ $(function(){
 			if($tiposuplemento != 4 && $tiposuplemento != 5) if (posjump < 160) jumpstat = 2; // CASO SUMPLEMENTO == 4 (PULOS MAIS ALTOS)
 			if (jumpstat == 2)
 			{
-				posjump = posjump + 4;
+				posjump = posjump + 3;
 				$("#player").y(posjump);
 				$trackerrec = $trackerrec + "y" + posjump;
 			}
@@ -287,6 +291,7 @@ $(function(){
 						if ($tipotenis != 4 && $tipotenis != 5 && jumpstat == 0) nextpos = $("#player").x()-50; // CASO TIPO DE TENIS <> 4 (RESISTENCIA NORMAL)
 						if ($tipotenis == 4 && jumpstat == 0) nextpos = $("#player").x()-25; // CASO TIPO DE TENIS == 4 (MAIOR RESISTENCIA ESTABILIDADE)
 						if ($tipotenis == 5 && jumpstat == 0) nextpos = $("#player").x()-20; // CASO TIPO DE TENIS == 5 (SUPER RESISTENCIA A OBSTACULOS)
+						if (jumpstat == 0 && $premio>0) $premio = $premio - 100; // perde 100 por colidir com a barreira
 						if(nextpos > 0){ // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A ESQUERDA
 							$("#player").x(nextpos);
 						}
@@ -297,9 +302,10 @@ $(function(){
 						$(this).css("width", 210);
 						$(this).removeClass("obstaculo");
 						// E FORCADO A PERDER VELOCIDADE VOLTANDO 1 PONTO PARA ESQUERDA
-						nextpos = $("#player2").x()-50;
-						if(nextpos > 0){ // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A ESQUERDA
-							$("#player2").x(nextpos);
+						nextpos2 = $("#player2").x()-50;
+						
+						if(nextpos2 > 0){ // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A ESQUERDA
+							$("#player2").x(nextpos2);
 						}
 					}
 				});
@@ -317,7 +323,6 @@ $(function(){
 			}
 		}else{
 			$("#playground").append('<div style="position: absolute; top: 50px; width: 570px; color: white; font-family: verdana, sans-serif;"><center><h1>Game Over</h1><br><a style="cursor: pointer;" id="restartbutton">FIM DE JOGO</a></center></div>');
-			//$("#playground").append('<div style="position: absolute; top: 50px; width: 700px; color: white; font-family: verdana, sans-serif;"><center><h1>Game Over</h1><br><a style="cursor: pointer;" id="restartbutton">Corredor 2 Venceu!</a></center></div>');
 			$("#restartbutton").click(restartgame);
 		}
 		
