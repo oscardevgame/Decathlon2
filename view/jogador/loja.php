@@ -2,8 +2,8 @@
 $loginPage = "../../index.php";
 $resourcesFolder = "../../resources/";
 $controllerFolder = "../../controller";
-$bigButtons = array("Logout" => "../../index.php");
-$navLinks = array("Home" => "../../index.php", "Loja" => "loja.php");
+$bigButtons = array("Login" => "../../index.php");
+$navLinks = array("Home" => "../../index.php", "Jogar" => "jogador.php");
 
 include_once '../template/head.php';
 include_once '../template/bodyHeaderContainer.php';
@@ -15,18 +15,16 @@ include_once '../template/bodyHeaderContainer.php';
         </div>
         <hr/>
         <div class="letter">
-            Itens disponíveis:
+            
         </div>
         <div class="letter">
-            Partidas Realizadas:
+            
         </div>
     </div>    
 </div>
 <div class="col-md-8 col-sm-8">
     <div class="letter">
-        <center>
-            <iframe style="border: 0; overflow: hidden;" width="594" height="400" src="../../game1/iframe.html" scrolling="no" frameborder="0"/>
-        </center>            
+                    
     </div>    
 </div>
 <?php include_once '../template/bodyFooter.php'; ?>

@@ -23,13 +23,13 @@
                         <p>
                             <?php foreach ($_SESSION["mensagens"] as $mensagem => $tipo) { ?>
                                 <?php if ($tipo == 'e') { ?>
-                                <pan style="color: red;margin-left: 10px;">
+                                <div class="alert alert-danger">
                                     <?php } else if ($tipo == 'a') { ?>
-                                    <pan style="color: orange;margin-left: 10px;">
+                                    <div class="alert alert-warning">
                                         <?php } else { ?>
-                                        <pan style="color: green;margin-left: 10px;">
+                                        <div class="alert alert-success">
                                     <?php } ?>
-                                        <b><?php echo $mensagem ?></b></pan><br/>
+                                        <b><?php echo $mensagem ?></b></div><br/>
                                 <?php } ?>
                                 </p>
                                 </div>

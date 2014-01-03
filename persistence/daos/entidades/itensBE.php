@@ -1,7 +1,7 @@
 <?php
 #########################################
 # CTASoftware                           #
-# Autor: Everton Gonçalves              #
+# Autor: Everton Gonï¿½alves              #
 # http://www.ctasoftware.com.br         #
 # E-mail: everton@ctasoftware.com.br    #
 #########################################
@@ -13,14 +13,22 @@ class itensBE{
     private $id_itens;
     private $descricao;
     private $valor;
+    private $path_image_item;
 
     /*
     * Propriedades dos atributos
     */
+   public function getPath_image_item() {
+       return $this->path_image_item;
+   }
 
-    public function setId_itens($id_itens){
-        $this->id_itens = $id_itens;
-    }
+   public function setPath_image_item($path_image_item) {
+       $this->path_image_item = $path_image_item;
+   }
+   
+   public function setId_itens($id_itens){
+       $this->id_itens = $id_itens;
+   }
 
     public function getId_itens(){
         return $this->id_itens;

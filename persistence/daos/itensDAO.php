@@ -7,6 +7,8 @@
 #########################################
 
 require_once 'entidades/itensBE.php';
+require_once 'conexaoBanco.php';
+
 
 class itensDAO{
 
@@ -23,7 +25,7 @@ class itensDAO{
         $conexao->conectar();
 
         # Executa comando SQL
-        $stmt = $conexao->pdo->prepare('UPDATE itens SET descricao = ?, valor = ?  WHERE id_itens = ?');
+        $stmt = $conexao->pdo->prepare('UPDATE itens SET descricao = ?, valor = ?, path_image_item = ?  WHERE id_itens = ?');
 
         # Seta Atributos nulos
 
@@ -32,6 +34,7 @@ class itensDAO{
         $stmt->bindValue(3,$dados->getId_itens());
         $stmt->bindValue(1,$dados->getDescricao());
         $stmt->bindValue(2,$dados->getValor());
+        $stmt->bindValue(4,$dados-getPath_image_item());
 
 
         try{
@@ -55,12 +58,13 @@ class itensDAO{
         $conexao->conectar();
 
         try{
-            $stmt = $conexao->pdo->prepare('INSERT INTO itens (descricao, valor) VALUES (?,?)');
+            $stmt = $conexao->pdo->prepare('INSERT INTO itens (descricao, valor, path_image_item) VALUES (?,?,?)');
 
 
 
-			$stmt->bindValue(1,$dados->getDescricao());
-			$stmt->bindValue(2,$dados->getValor());
+            $stmt->bindValue(1,$dados->getDescricao());
+            $stmt->bindValue(2,$dados->getValor());
+            $stmt->bindValue(3,$dados->getPath_image_item());
 
             $retorno = $stmt->execute();
         }
@@ -80,7 +84,7 @@ class itensDAO{
 	    $conexao->conectar();
 
 	    # Executa comando SQL
-	    $stmt = $conexao->pdo->prepare('SELECT id_itens, descricao, valor FROM itens WHERE id_itens = ? ');
+	    $stmt = $conexao->pdo->prepare('SELECT id_itens, descricao, valor, path_image_item FROM itens WHERE id_itens = ? ');
 
 	    # Passando os valores a serem usados
     	$dados = array($pk);
@@ -96,6 +100,7 @@ class itensDAO{
 		    $itensBE->setId_itens($row['id_itens']);
 		    $itensBE->setDescricao($row['descricao']);
 		    $itensBE->setValor($row['valor']);
+                    $itensBE->setPath_image_item($row['path_image_item']);
     	}
 
     	return $itensBE;
@@ -110,7 +115,7 @@ class itensDAO{
     	$conexao->conectar();
 
     	# Executa comando SQL
-    	$stmt = $conexao->pdo->prepare('SELECT id_itens, descricao, valor FROM itens ORDER BY id_itens DESC');
+    	$stmt = $conexao->pdo->prepare('SELECT id_itens, descricao, valor, path_image_item FROM itens ORDER BY id_itens DESC');
 
     	// Executa Query
     	$stmt->execute();
@@ -127,7 +132,8 @@ class itensDAO{
 		    $itensBE->setId_itens($row['id_itens']);
 		    $itensBE->setDescricao($row['descricao']);
 		    $itensBE->setValor($row['valor']);
-
+                    $itensBE->setPath_image_item($row['path_image_item']);
+                    
     		$lista[$i] = $itensBE;
     		$i++;
     	}

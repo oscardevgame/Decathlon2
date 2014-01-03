@@ -7,7 +7,7 @@ $loginPage = "../../index.php";
 $resourcesFolder = "../../resources/";
 $controllerFolder = "../../controller";
 $bigButtons = array("Login" => "../../index.php");
-$navLinks = array("Home" => "index.php", "Loja" => "loja.php", "Meu Cadastro"=>"cadastro.php");
+$navLinks = array("Home" => "index.php");
 
 include_once '../template/head.php';
 include_once '../template/bodyHeaderContainer.php';

@@ -2,10 +2,10 @@
 -- version 4.0.4.1
 -- http://www.phpmyadmin.net
 --
--- M√°quina: 127.0.0.1
--- Data de Cria√ß√£o: 20-Dez-2013 √†s 18:15
--- Vers√£o do servidor: 5.6.11
--- vers√£o do PHP: 5.5.3
+-- M·quina: 127.0.0.1
+-- Data de CriaÁ„o: 03-Jan-2014 ‡s 05:07
+-- Vers„o do servidor: 5.6.11
+-- vers„o do PHP: 5.5.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES latin1 */;
 
 --
 -- Base de Dados: `dbdecathlon`
@@ -79,8 +79,9 @@ CREATE TABLE IF NOT EXISTS `itens` (
   `id_itens` bigint(20) NOT NULL AUTO_INCREMENT,
   `descricao` varchar(30) NOT NULL,
   `valor` double NOT NULL,
+  `path_image_item` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_itens`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -125,7 +126,16 @@ CREATE TABLE IF NOT EXISTS `perfil_usuario` (
   PRIMARY KEY (`id_usuario_perfil`),
   KEY `perfis_perfil_usuario_fk` (`id_perfil`),
   KEY `usuarios_perfil_usuario_fk` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Extraindo dados da tabela `perfil_usuario`
+--
+
+INSERT INTO `perfil_usuario` (`id_usuario_perfil`, `id_perfil`, `id_usuario`) VALUES
+(1, 1, 1),
+(2, 2, 1),
+(3, 1, 50);
 
 -- --------------------------------------------------------
 
@@ -137,7 +147,15 @@ CREATE TABLE IF NOT EXISTS `perfis` (
   `id_perfil` bigint(20) NOT NULL AUTO_INCREMENT,
   `descricao` varchar(30) NOT NULL,
   PRIMARY KEY (`id_perfil`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Extraindo dados da tabela `perfis`
+--
+
+INSERT INTO `perfis` (`id_perfil`, `descricao`) VALUES
+(1, 'jogador'),
+(2, 'admin');
 
 -- --------------------------------------------------------
 
@@ -149,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `power` (
   `id_power` bigint(20) NOT NULL AUTO_INCREMENT,
   `descricao` varchar(30) NOT NULL,
   PRIMARY KEY (`id_power`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -164,8 +182,17 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `senha` varchar(255) NOT NULL,
   `facebook` varchar(100) NOT NULL,
   `path_file_foto` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id_usuario`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=51 ;
+
+--
+-- Extraindo dados da tabela `usuarios`
+--
+
+INSERT INTO `usuarios` (`id_usuario`, `email`, `nome`, `senha`, `facebook`, `path_file_foto`) VALUES
+(1, 'oscar.devgame@gmail.com', 'Oscar', 'oscar', 'oscar.devgame', ''),
+(50, 'oscar.devgame3@gmail.com', 'Oscar 3', 'oscar', '', '../resources/images/oscar.devgame3@gmail.com/default-avatar.png');
 
 -- --------------------------------------------------------
 
@@ -181,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `usuario_itens` (
   PRIMARY KEY (`id_power`),
   KEY `itens_usuario_itens_fk` (`id_itens`),
   KEY `usuarios_usuario_itens_fk` (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Constraints for dumped tables
@@ -231,8 +258,8 @@ ALTER TABLE `perfil_usuario`
 -- Limitadores para a tabela `usuario_itens`
 --
 ALTER TABLE `usuario_itens`
-  ADD CONSTRAINT `usuarios_usuario_itens_fk` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `itens_usuario_itens_fk` FOREIGN KEY (`id_itens`) REFERENCES `itens` (`id_itens`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `itens_usuario_itens_fk` FOREIGN KEY (`id_itens`) REFERENCES `itens` (`id_itens`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `usuarios_usuario_itens_fk` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
