@@ -3,9 +3,10 @@ $loginPage = "../../index.php";
 $resourcesFolder = "../../resources/";
 $controllerFolder = "../../controller";
 $bigButtons = array("Logout" => "../../index.php");
-$navLinks = array("Itens"=>"itens.php", 
-                  "Partidas"=>"partidas.php", 
-                  "Usuarios"=>"usuarios.php");
+$navLinks = array("Itens" => "itens.php",
+    "Poderes" => "poderes.php",
+    "Partidas" => "partidas.php",
+    "Usuarios" => "usuarios.php");
 
 include_once '../template/head.php';
 include_once '../template/bodyHeaderContainer.php';

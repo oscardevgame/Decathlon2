@@ -7,6 +7,7 @@
 #########################################
 
 require_once 'entidades/powerBE.php';
+require_once 'conexaoBanco.php';
 
 class powerDAO{
 
@@ -49,21 +50,24 @@ class powerDAO{
     * ---------------------------------------------
     */
     public function incluir($dados){
-        # Faz conex�o
+        # Faz conexao
         $conexao = new conexaoBanco();
         $conexao->conectar();
 
         try{
             $stmt = $conexao->pdo->prepare('INSERT INTO power (descricao) VALUES (?)');
-
-
-
-			$stmt->bindValue(1,$dados->getDescricao());
-
-            $retorno = $stmt->execute();
+	    $stmt->bindValue(1,$dados->getDescricao());
+            
+            if($stmt->execute()){
+                $retorno = $conexao->pdo->lastInsertId(); 
+            } else {
+                $message = $stmt->errorInfo();
+                $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message[2]"=>"e"));
+                return -1;
+            }
         }
         catch ( PDOException $ex ){  
-            echo 'Erro: ' . $ex->getMessage(); 
+            throw $ex;
         }
 
         return $retorno;

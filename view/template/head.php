@@ -1,4 +1,4 @@
-<?php
+<?php-
     if(session_status() != PHP_SESSION_ACTIVE){
         session_start();
     }
@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <meta charset="utf-8">
         <title>Decathlon</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">

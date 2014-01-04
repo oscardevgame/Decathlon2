@@ -3,72 +3,60 @@
 if (session_status() != PHP_SESSION_ACTIVE) {
     session_start();
 }
-include_once '../persistence/daos/entidades/usuariosBE.php';
-include_once '../persistence/daos/entidades/perfisBE.php';
-include_once '../persistence/daos/entidades/perfil_usuarioBE.php';
-include_once '../persistence/daos/usuariosDAO.php';
-include_once '../persistence/daos/perfisDAO.php';
-include_once '../persistence/daos/perfil_usuarioDAO.php';
+include_once '../persistence/daos/entidades/itensBE.php';
+include_once '../persistence/daos/entidades/itens_powerBE.php';
+include_once '../persistence/daos/itensDAO.php';
+include_once '../persistence/daos/itens_powerDAO.php';
 
-$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-$nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_STRING);
-$senha = filter_input(INPUT_POST, 'senha');
-$senhaConfirm = filter_input(INPUT_POST, 'senhaConfirm');
-$facebook = filter_input(INPUT_POST, 'facebook');
+$descricao = filter_input(INPUT_POST, 'descricao', FILTER_SANITIZE_STRING);
+$valor = filter_input(INPUT_POST, 'valor', FILTER_SANITIZE_NUMBER_FLOAT);
+$imagem = filter_input(INPUT_POST, 'imagem');
+$poder = filter_input(INPUT_POST, 'poder');
 
-if (empty(trim($senha))) {
-    $message = "O campo senha È obrigatÛrio!";
+if (empty(trim($descricao))) {
+    $message = "O campo descriÁ„o È obrigatÛrio!";
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
     header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
     return;
 }
 
-if (empty(trim($nome))) {
-    $message = "O campo nome È obrigatÛrio!";
+if (empty(trim($valor))) {
+    $message = "O campo valor È obrigatÛrio!";
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
     header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
     return;
 }
 
-if (empty(trim($email))) {
-    $message = "O campo nome È obrigatÛrio!";
+if (empty(trim($poder)) || $poder == 0) {
+    $message = "O campo poder È obrigatÛrio!";
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
     header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
     return;
 }
 
-if ($senha != $senhaConfirm) {
-    $message = "Senhas informadas est„o diferentes!";
-    $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
-    header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
-    return;
-}
+$itemNovo = new itensBE();
+$itemNovo->setDescricao($descricao);
+$itemNovo->setValor($nome);
 
-$usuarioNovo = new usuariosBE();
-$usuarioNovo->setEmail($email);
-$usuarioNovo->setNome($nome);
-$usuarioNovo->setSenha($senha);
-$usuarioNovo->setFacebook($facebook);
-
-if ($_FILES["avatar"]["error"] != UPLOAD_ERR_NO_FILE) {
-    if ($_FILES["avatar"]["size"] > 5000000) {
-        $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("Arquivo do avatar n√£o pode exceder 5MB.<br>" => "a"));
+if ($_FILES["iconeItem"]["error"] != UPLOAD_ERR_NO_FILE) {
+    if ($_FILES["iconeItem"]["size"] > 5000000) {
+        $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("Arquivo do icone n„o pode exceder 5MB.<br>" => "a"));
         header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
         return;
     }
 
-    $iconeFilename = $_FILES['avatar']['name'];
-    $imageDir = "../resources/images/$email";
+    $iconeFilename = $_FILES['iconeItem']['name'];
+    $imageDir = "../resources/images/adm/item";
     $path_file_foto = "$imageDir/$iconeFilename";
     if (!file_exists($path_file_foto)) {
         if (!file_exists($imageDir)) {
             mkdir($imageDir);
         }
-        move_uploaded_file($_FILES["avatar"]["tmp_name"], $path_file_foto);
+        move_uploaded_file($_FILES["iconeItem"]["tmp_name"], $path_file_foto);
     }
 
-    if ($_FILES["avatar"]["error"] != UPLOAD_ERR_OK) {
-        $errorCode = $_FILES["avatar"]["error"];
+    if ($_FILES["iconeItem"]["error"] != UPLOAD_ERR_OK) {
+        $errorCode = $_FILES["iconeItem"]["error"];
         switch ($errorCode) {
             case UPLOAD_ERR_INI_SIZE:
                 $message = "The uploaded file exceeds the upload_max_filesize directive in php.ini";
@@ -101,8 +89,8 @@ if ($_FILES["avatar"]["error"] != UPLOAD_ERR_NO_FILE) {
         return;
     }
 } else {
-    $iconeFilename = "default-avatar.png";
-    $imageDir = "../resources/images/$email";
+    $iconeFilename = "noImageAvaliable.png";
+    $imageDir = "../resources/images/adm/item";
     $path_file_foto = "$imageDir/$iconeFilename";
     if (!file_exists($path_file_foto)) {
         if (!file_exists($imageDir)) {
@@ -111,20 +99,11 @@ if ($_FILES["avatar"]["error"] != UPLOAD_ERR_NO_FILE) {
         copy("../resources/images/$iconeFilename", $path_file_foto);
     }
 }
-$usuarioNovo->setPath_file_foto($path_file_foto);
-$usuarioDAO = new usuariosDAO();
+$itemNovo->setPath_image_item($path_file_foto);
+$itensDAO = new itensDAO();
 
-$usuario = new usuariosBE();
-$usuario = $usuarioDAO->ObterPorEmail($email);
-
-if ($usuario->getId_usuario() > 0) {
-    $message = "J· existe usu·rio para o e-mail:$email";
-    $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
-    header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
-    return;
-}
 try {
-    $novoIdUsuario = $usuarioDAO->incluir($usuarioNovo);
+    $novoIdItem = $itensDAO->incluir($itemNovo);
 } catch (PDOException $e) {
     $message = $e->getMessage();
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "e"));
@@ -132,11 +111,11 @@ try {
     return;
 }
 
-$perfisUsuarioDAO = new perfil_usuarioDAO();
-$perfilDoUsuario = new perfil_usuarioBE();
-$perfilDoUsuario->setId_usuario($novoIdUsuario);
-$perfilDoUsuario->setId_perfil(1);
-$perfisUsuarioDAO->incluir($perfilDoUsuario);
+$itensPowerDAO = new itens_powerDAO();
+$itemPower = new itens_powerBE();
+$itemPower->setId_itens($novoIdItem);
+$itemPower->setId_power($poder);
+$itemPower->incluir($itemPower);
 
-include '../controller/autentica.php';
+header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
 ?>

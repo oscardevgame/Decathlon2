@@ -4,6 +4,7 @@ $resourcesFolder = "../../resources/";
 $controllerFolder = "../../controller";
 $bigButtons = array("Logout" => "../../index.php");
 $navLinks = array("Itens" => "itens.php",
+    "Poderes"=>"poderes.php",
     "Partidas" => "partidas.php",
     "Usuarios" => "usuarios.php");
 
@@ -27,11 +28,24 @@ $listPowers = $itensController->listPowers();
 <div class="col-md-12 col-sm-12">
     <div class="news">
         <div class="letter">
-            <?php foreach ($listItens as $keyItens => $valItens) { ?>
-                <?php foreach ($valItem as $keyItem => $valItem) { ?>
-
+            <table class="table table-hover">
+                <tr>
+                    <th>Id</th>
+                    <th>Descricao</th>
+                    <th>Valor</th>
+                    <th>Poder</th>
+                    <th>Imagem</th>
+                </tr>
+                <?php foreach ($listItens as $keyItens => $valItens) { ?>
+                    <tr>
+                        <td><?php echo $valItens->getId_itens() ?></td>
+                        <td><?php echo $valItens->getDescricao() ?></td>
+                        <td><?php echo $valItens->getValor() ?></td>
+                        <td><?php echo "poder" ?></td>
+                        <td><?php echo $valItens->getPath_image_item() ?></td>
+                    </tr>
                 <?php } ?>
-            <?php } ?>
+            </table>
         </div>
     </div>
     <div class="panel-group col-md-12 col-sm-12" id="accordionItem">
@@ -55,11 +69,7 @@ $listPowers = $itensController->listPowers();
                                     <input type="text" name="valor" class="form-control" placeholder="Valor">
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" name="valor" class="form-control" placeholder="Valor">
-                                </div>
-
-                                <div class="form-group">
-                                    <input type="file" name="imagem" class="form-control" placeholder="Imagem">
+                                    <input type="file" name="iconeItem" class="form-control" placeholder="Imagem">
                                 </div>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-default">Inserir</button>
@@ -68,40 +78,15 @@ $listPowers = $itensController->listPowers();
                             <div class="col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label>Poder Associado:</label>
-                                    <select id="comboPowers" class="form-control">
+                                    <select name="poder" id="comboPowers" class="form-control">
                                         <option value="0">Selecione...</option>
                                         <?php foreach ($listPowers as $keyPower => $valuePower) { ?>
-                                            <option value="<?php echo $valuePower->getId_power() ?>"><?php $valuePower->getDescricao() ?></option>
+                                            <option value="<?php echo $valuePower->getId_power() ?>"><?php echo $valuePower->getId_power()." - ".$valuePower->getDescricao() ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
-                                <div class="panel-group" id="accordionPower">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h4 class="panel-title">
-                                                <a data-toggle="collapse" data-parent="#accordionPower" href="#collapseTwo">
-                                                    <span class="glyphicon glyphicon-plus"></span> Novo Poder
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div id="collapseTwo" class="panel-collapse collapse out">
-                                            <div class="panel-body">
-                                                <form role="form" method="POST" action="../../controller/inserePoder.php">
-                                                    <div class="form-group">
-                                                        <input type="text" name="descrição" class="form-control" placeholder="Descrição">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <button type="submit" class="btn btn-default">Inserir</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
-
                         </div>
-
                     </form>
                 </div>
             </div>
