@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Máquina: 127.0.0.1
--- Data de Criação: 03-Jan-2014 às 05:07
+-- Data de Criação: 04-Jan-2014 às 18:16
 -- Versão do servidor: 5.6.11
 -- versão do PHP: 5.5.3
 
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES latin1 */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Base de Dados: `dbdecathlon`
@@ -81,7 +81,33 @@ CREATE TABLE IF NOT EXISTS `itens` (
   `valor` double NOT NULL,
   `path_image_item` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_itens`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
+
+--
+-- Extraindo dados da tabela `itens`
+--
+
+INSERT INTO `itens` (`id_itens`, `descricao`, `valor`, `path_image_item`) VALUES
+(1, 'Camisa vermelha', 0, 'game1/cor1.png'),
+(2, 'Camisa Amarela', 0, 'game1/cor2.png'),
+(3, 'Camisa Azul', 0, 'game1/cor3.png'),
+(4, 'Camisa Verde', 0, 'game1/cor4.png'),
+(5, 'Camisa Rosa', 0, 'game1/cor5.png'),
+(6, 'Tenis Normal', 0, 'game1/tipotenis1.png'),
+(7, 'Tenis Veloz', 2000, 'game1/tipotenis2.png'),
+(8, 'Tenis Hiper-veloz', 5000, 'game1/tipotenis3.png'),
+(9, 'Tenis Aderente', 7000, 'game1/tipotenis4.png'),
+(10, 'Tenis Hiper-aderente', 10000, 'game1/tipotenis5.png'),
+(11, 'Água', 0, 'game1/tiposuplemento1.png'),
+(12, 'Vitaminas', 3000, 'game1/tiposuplemento2.png'),
+(13, 'Energético', 7000, 'game1/tiposuplemento3.png'),
+(14, 'Feijão mexicano', 10000, 'game1/tiposuplemento4.png'),
+(15, 'Anabolizante', 15000, 'game1/tiposuplemento5'),
+(16, 'Anjo', 0, 'game1/tipotrapaca1.png'),
+(17, 'Empurrão', 10000, 'game1/tipotrapaca2.png'),
+(18, 'Rouba trapaça', 20000, 'game1/tipotrapaca3.png'),
+(19, 'Desliza', 20000, 'game1/tipotrapaca4.png'),
+(20, 'Cria barreira', 30000, 'game1/tipotrapaca5.png');
 
 -- --------------------------------------------------------
 
@@ -96,7 +122,33 @@ CREATE TABLE IF NOT EXISTS `itens_power` (
   PRIMARY KEY (`id_itens_power`),
   KEY `power_itens_power_fk` (`id_power`),
   KEY `itens_itens_power_fk` (`id_itens`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
+
+--
+-- Extraindo dados da tabela `itens_power`
+--
+
+INSERT INTO `itens_power` (`id_itens_power`, `id_power`, `id_itens`) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 1, 3),
+(4, 1, 4),
+(5, 1, 5),
+(6, 1, 6),
+(7, 2, 7),
+(8, 3, 8),
+(9, 4, 9),
+(10, 5, 10),
+(11, 1, 11),
+(12, 6, 12),
+(13, 7, 13),
+(14, 10, 14),
+(15, 11, 15),
+(16, 1, 16),
+(17, 12, 17),
+(18, 13, 18),
+(19, 14, 19),
+(20, 15, 20);
 
 -- --------------------------------------------------------
 
@@ -167,7 +219,26 @@ CREATE TABLE IF NOT EXISTS `power` (
   `id_power` bigint(20) NOT NULL AUTO_INCREMENT,
   `descricao` varchar(30) NOT NULL,
   PRIMARY KEY (`id_power`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
+
+--
+-- Extraindo dados da tabela `power`
+--
+
+INSERT INTO `power` (`id_power`, `descricao`) VALUES
+(1, 'nenhum poder'),
+(2, 'Aumenta velocidade 1x'),
+(3, 'Aumenta velocidade 2x'),
+(4, 'Aderente'),
+(5, 'Muito aderente'),
+(6, 'Velocidade extra'),
+(7, 'Super força'),
+(10, 'Super pulo'),
+(11, 'Hiper pulo'),
+(12, 'empurrão'),
+(13, 'rouba trapaça'),
+(14, 'desliza'),
+(15, 'cria barreira');
 
 -- --------------------------------------------------------
 
