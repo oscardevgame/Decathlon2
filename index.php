@@ -1,33 +1,32 @@
 <?php
-include_once 'persistence/daos/ConexaoBanco.php';
-include_once 'persistence/daos/usuariosDAO.php';
-include_once 'persistence/daos/entidades/usuariosBE.php';
+include_once 'ConexaoBanco.php';
+include_once 'usuariosDAO.php';
+include_once 'usuariosBE.php';
 
 $resourcesFolder = "resources/";
-$controllerFolder = "controller";
-$bigButtons = array("Cadastre-se" => "view/public/cadastroUsuario.php");
+$bigButtons = array("Cadastre-se" => "viewCadastroUsuario.php");
 $navLinks = array();
 
-include_once './view/template/head.php';
-include_once './view/template/bodyHeaderContainer.php';
+include_once 'templateHead.php';
+include_once 'templateBodyHeaderContainer.php';
 ?>
 <div class="col-md-7 col-sm-7">
     <div class="intro">
         <h1>Jogo</h1>
-        <p>Jogue o Remake do Decathlon, disponÃ­vel em sua rede social. 
-            Com vÃ¡rios itens de aÃ§Ã£o, seu jogo se tornarÃ¡ especial. 
-            Utilize-os da melhor forma possÃ­vel.
-            Tome cuidado com os obstÃ¡culos no percurso, seja cauteloso em suas jogadas.
+        <p>Jogue o Remake do Decathlon, disponível em sua rede social. 
+            Com vários itens de ação, seu jogo se tornará¡ especial. 
+            Utilize-os da melhor forma possível.
+            Tome cuidado com os obstáculos no percurso, seja cauteloso em suas jogadas.
             Evolua sua categoria.
         </p>
         <h1>Power Up's</h1>
-        <p>Utilize sua pontuaÃ§Ã£o para adquirir itens como roupas e tÃªnis que aumentarÃ£o
-            sua performance. Itens de Ã³tima qualidade de nossos patrocinadores.
+        <p>Utilize sua pontuação para adquirir itens como roupas e tênis que aumentarão
+            sua performance. Itens de ótima qualidade de nossos patrocinadores.
         </p>
-        <h1>MecÃ¢nica</h1>
+        <h1>Mecânica</h1>
         <p>
             Usando teclado, setas direita/esquerda (mouse) o jogador mexe cada perna.
-            Corre 5 vezes e deve recuperar o fÃ´lego durante um intervalo de 30 minutos.
+            Corre 5 vezes e deve recuperar o fôlego durante um intervalo de 30 minutos.
             O clima interfere no corrida.
         </p>
     </div>
@@ -37,7 +36,7 @@ include_once './view/template/bodyHeaderContainer.php';
         <div class="letter">
             <h3>Interatividade</h3>
             <p>Notifique seus amigos quando houver troca de categoria.
-                Alerte seu grupo que estÃ¡ torcendo por um corredor.
+                Alerte seu grupo que estão torcendo por um corredor.
                 Corra com seus amigos e avise quando ultrapassou sua marca.
             </p>
         </div>
@@ -45,7 +44,7 @@ include_once './view/template/bodyHeaderContainer.php';
     <div class="news">
         <div class="letter">
             <h4>Jogar</h4>
-            <form role="form" method="POST" action="controller/autentica.php">
+            <form role="form" method="POST" action="controllerAutentica.php">
                 <div class="form-group">
                     <input type="text" name="email" class="form-control" placeholder="Email">
                 </div>
@@ -59,4 +58,4 @@ include_once './view/template/bodyHeaderContainer.php';
         </div>
     </div>
 </div>
-<?php include_once './view/template/bodyFooter.php'; ?>
+<?php include_once 'templateBodyFooter.php'; ?>
