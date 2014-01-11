@@ -15,6 +15,22 @@ $controllerItens = new itensController();
 $listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]);
 
 ?>
+<script> 
+  $(function(){
+    $('#tableItensDisp tr').click(function() {
+        if ($(this).find(':checkbox').is(':checked')) {            
+            $(this).find(':checkbox').attr("disabled",false);
+            $(this).find(':checkbox').prop("checked",false);
+            $(this).find(':checkbox').attr("disabled",true);
+        } else {
+            $(this).find(':checkbox').attr("disabled",false);
+            $(this).find(':checkbox').prop("checked",true);
+            $(this).find(':checkbox').attr("disabled",true);
+        }
+    });
+});
+</script>
+
 <div class="col-md-4 col-sm-4">
     <div class="news">
         <div class="letter">
@@ -23,7 +39,7 @@ $listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]
         <hr/>
         <div class="letter">
             Itens disponíveis:
-            <table class="table table-hover">
+            <table class="table table-hover" id="tableItensDisp">
                 <tr>
                     <th></th>
                     <th></th>
@@ -40,7 +56,11 @@ $listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]
                         <td><?php echo $item->getId_power()->getDescricao() ?></td>
                     </tr>
                 <?php } ?>
-                
+                <tr>
+                    <td colspan="4" style="text-align: right">
+                        <input type="button" value="Iniciar Jogo"/>
+                    </td>
+                </tr>
             </table>
         </div>
         <div class="letter">
