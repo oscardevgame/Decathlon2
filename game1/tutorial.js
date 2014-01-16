@@ -25,6 +25,13 @@ var jumpstat = 0;
 var $tp = 1;
 var $tpx = "";
 
+//variaveis para manipulacao do tracker
+var playerposicaoarray = new Array();
+var posxyp1 =0;
+var gravou = 0;
+//------------------------------------
+
+
 // OUTRAS FUNCOES
 
 // REINICIAR O JOGO
@@ -52,13 +59,6 @@ function Player(node) {
     return true;
 };
 
-/*function partida(usuarioId,partidaId,dataTracker,pontuacao, data){ 
-    this.usuarioId = usuarioId; 
-    this.partidaId = partidaId; 
-    this.dataTracker = dataTracker;
-    this.pontuacao = pontuacao;
-    this.data = data;
-}*/
 
 function obstaculo(node) {
     this.corredor1 = 2;
@@ -111,6 +111,33 @@ Bossy.prototype.updateX = function() {
 // --                                      DECLARACAO PRINCIPAL                                                    --
 // --------------------------------------------------------------------------------------------------------------------
 $(function() {
+
+    //FUNCAO DO BOTAO INICIAR DO JOGO
+    $("#startbutton").click(function() {
+        $.playground().startGame(function() {
+            $("#welcomeScreen").fadeTo(1000, 0, function() {
+                //Obter o tracker
+                partida={partidaId:31};
+                $.ajax({
+                    dataType: "json",
+                    url: "controllerRecuperaPartida.php",
+                    data: partida ,
+                    type: 'POST',
+                    sucess:function(retorno, textStatus, jqXHR){
+                        console.log("SUCESSO: \nretorno: " + retorno + "\ntext: " + textStatus + "\njqXHR: " + jqXHR);
+                    },
+                    complete:function( jqXHR, textStatus){
+                        console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  jqXHR.responseText);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
+                    }
+                });
+                
+            });
+        });
+    });
+
 
     // CARREGA CENARIO
     var background1 = new $.gQ.Animation({imageURL: "game1/background1.png"});
@@ -223,61 +250,6 @@ $(function() {
     $.loadCallback(function(percent) {
         $("#loadingBar").width(400 * percent);
     });
-
-
-
-    //FUNCAO DO BOTAO INICIAR DO JOGO
-    $("#startbutton").click(function() {
-        $.playground().startGame(function() {
-            $("#welcomeScreen").fadeTo(1000, 0, function() {
-                /*Obter o tracker*/
-                partida={partidaId:31};
-                $.ajax({
-                    dataType: "json",
-                    url: "controllerRecuperaPartida.php",
-                    data: partida ,
-                    type: 'POST',
-                    sucess:function(retorno, textStatus, jqXHR){
-                        console.log("SUCESSO: \nretorno: " + retorno + "\ntext: " + textStatus + "\njqXHR: " + jqXHR);
-                    },
-                    complete:function( jqXHR, textStatus){
-                        console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  jqXHR.responseText);
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
-                    }
-                });
-                
-                /* Incluir uma partida com novo tracker
-                tracker = [[1,2],[3,4],[5,6],[7,8]];
-                partida={pontuacao:"5000",dataTracker:tracker};
-                $.ajax({
-                    dataType: "json",
-                    url: "controllerInserePartida.php",
-                    data: partida ,
-                    type: 'POST',
-                    sucess:function(json){
-                        alert("Certo: " + json);
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
-                        //alert('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
-                    }
-                });*/
-            });
-        });
-    });
-
-	//CARREGA AS VARIAVEIS QUE SERAO UTILIZADAS PELO AJAX PARA GRAVAR O TRACKER ********************************************
-	//**********************************************************************************************************************
-	//**********************************************************************************************************************
-			  var now = new Date();
-			  var Filename = $usuario+now.getHours()+'.dl2'; 
-			  var PlayerTrack = 'x100y400';
-			  var dataString = 'nameoffile='+Filename+'&tracker='+PlayerTrack;
-	//**********************************************************************************************************************
-	//**********************************************************************************************************************
-	//**********************************************************************************************************************
 
     // ESTA E A FUNCAO QUE CONTROLA A MAIORIA DOS EVENTOS DO JOGO
     $.playground().registerCallback(function() {
@@ -423,24 +395,12 @@ $(function() {
             });
         }
 	//***************************************************  TRACKER *******************************************************
+		playerposicaoarray[posxyp1] = [$("#player").x()+","+$("#player").y()];
+		posxyp1=posxyp1+1;
 	//**********************************************************************************************************************
-	//********************************************************************************************************************** 
-    /*PlayerTrack = 'x'+$("#player").x()+'y'+$("#player").y();
-   	dataString = 'nameoffile='+'PARTIDAS/'+Filename+'&tracker='+PlayerTrack;
-	  $.ajax({
-		type:'POST',
-		data:dataString,
-		url:'rectrack.php',
-			success:function(data) {
-			   return false;
-			}
-	  });*/
-	//**********************************************************************************************************************
-	//**********************************************************************************************************************
-	//**********************************************************************************************************************
-        
+       
     }, REFRESH_RATE);
-
+    
     //ESTA FUN��O CRIA AS BARREIRAS ALEATORIAMENTE
     $.playground().registerCallback(function() {
         if (!gameOver) {
@@ -449,12 +409,33 @@ $(function() {
                 $("#actors").addSprite(name, {animation: obstaculos[0]["idle"], posx: PLAYGROUND_WIDTH, posy: 210, width: 16, height: 64});
                 $("#" + name).addClass("obstaculo");
                 $("#" + name)[0].obstaculo = new barreira($("#" + name));
+		       
             }
         } else {
             $("#playground").append('<div style="position: absolute; top: 50px; width: 570px; color: white; font-family: verdana, sans-serif;"><center><h1>Game Over</h1><br><a style="cursor: pointer;" id="restartbutton">FIM DE JOGO</a></center></div>');
             $("#restartbutton").click(restartgame);
+    		
+    		//Incluir uma partida com novo tracker
+    		if (gravou == 0) {
+	    		tracker = playerposicaoarray;
+		        partida={pontuacao:$premio,dataTracker:tracker};
+		        $.ajax({
+		            dataType: "json",
+		            url: "controllerInserePartida.php",
+		            data: partida ,
+		            type: 'POST',
+		            sucess:function(json){
+		                alert("Certo: " + json);
+		            },
+		            error: function(jqXHR, textStatus, errorThrown) {
+		                console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown:'+errorThrown+"\nResponse:\n"+jqXHR.responseText);
+		            },
+		         });
+		         gravou = 1;
+		    }
         }
-
+        
+        
     }, 1000); //UMA POR SEGUNDO
 
 
