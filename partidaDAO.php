@@ -6,7 +6,8 @@
 # E-mail: everton@ctasoftware.com.br    #
 #########################################
 
-require_once 'entidades/partidaBE.php';
+require_once 'conexaoBanco.php';
+require_once 'partidaBE.php';
 
 class partidaDAO{
 
@@ -56,15 +57,19 @@ class partidaDAO{
         $conexao->conectar();
 
         try{
-            $stmt = $conexao->pdo->prepare('INSERT INTO partida (id_usuario, data, path_file_tracker) VALUES (?,?,?)');
-
-
-
-			$stmt->bindValue(1,$dados->getId_usuario());
-			$stmt->bindValue(2,$dados->getData());
-			$stmt->bindValue(3,$dados->getPath_file_tracker());
-
-            $retorno = $stmt->execute();
+            $stmt = $conexao->pdo->prepare('INSERT INTO partida (id_usuario, data, path_file_tracker, pontuacao) VALUES (?,?,?,?)');
+            $stmt->bindValue(1,$dados->getId_usuario());
+            $stmt->bindValue(2,$dados->getData());
+            $stmt->bindValue(3,$dados->getPath_file_tracker());
+            $stmt->bindValue(4,$dados->getPontuacao());
+            
+            if($stmt->execute()){
+                $retorno = $conexao->pdo->lastInsertId(); 
+            } else {
+                $message = $stmt->errorInfo();
+                $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message[2]"=>"e"));
+                return -1;
+            }
         }
         catch ( PDOException $ex ){  
             echo 'Erro: ' . $ex->getMessage(); 

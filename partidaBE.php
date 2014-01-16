@@ -14,7 +14,8 @@ class partidaBE{
     private $id_usuario;
     private $data;
     private $path_file_tracker;
-
+    private $pontuacao;
+    
     /*
     * Propriedades dos atributos
     */
@@ -49,6 +50,14 @@ class partidaBE{
 
     public function getPath_file_tracker(){
         return $this->path_file_tracker;
+    }
+    
+     public function setPontuacao($pontuacao){
+        $this->pontuacao = $pontuacao;
+    }
+
+    public function getPontuacao(){
+        return $this->pontuacao;
     }
 }
 

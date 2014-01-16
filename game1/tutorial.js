@@ -52,6 +52,14 @@ function Player(node) {
     return true;
 };
 
+/*function partida(usuarioId,partidaId,dataTracker,pontuacao, data){ 
+    this.usuarioId = usuarioId; 
+    this.partidaId = partidaId; 
+    this.dataTracker = dataTracker;
+    this.pontuacao = pontuacao;
+    this.data = data;
+}*/
+
 function obstaculo(node) {
     this.corredor1 = 2;
     this.speedx = -4;
@@ -216,11 +224,46 @@ $(function() {
         $("#loadingBar").width(400 * percent);
     });
 
+
+
     //FUNCAO DO BOTAO INICIAR DO JOGO
     $("#startbutton").click(function() {
         $.playground().startGame(function() {
             $("#welcomeScreen").fadeTo(1000, 0, function() {
-                //$(this).remove();
+                /*Obter o tracker*/
+                partida={partidaId:31};
+                $.ajax({
+                    dataType: "json",
+                    url: "controllerRecuperaPartida.php",
+                    data: partida ,
+                    type: 'POST',
+                    sucess:function(retorno, textStatus, jqXHR){
+                        console.log("SUCESSO: \nretorno: " + retorno + "\ntext: " + textStatus + "\njqXHR: " + jqXHR);
+                    },
+                    complete:function( jqXHR, textStatus){
+                        console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  jqXHR.responseText);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
+                    }
+                });
+                
+                /* Incluir uma partida com novo tracker
+                tracker = [[1,2],[3,4],[5,6],[7,8]];
+                partida={pontuacao:"5000",dataTracker:tracker};
+                $.ajax({
+                    dataType: "json",
+                    url: "controllerInserePartida.php",
+                    data: partida ,
+                    type: 'POST',
+                    sucess:function(json){
+                        alert("Certo: " + json);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
+                        //alert('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
+                    }
+                });*/
             });
         });
     });
@@ -382,7 +425,7 @@ $(function() {
 	//***************************************************  TRACKER *******************************************************
 	//**********************************************************************************************************************
 	//********************************************************************************************************************** 
-    PlayerTrack = 'x'+$("#player").x()+'y'+$("#player").y();
+    /*PlayerTrack = 'x'+$("#player").x()+'y'+$("#player").y();
    	dataString = 'nameoffile='+'PARTIDAS/'+Filename+'&tracker='+PlayerTrack;
 	  $.ajax({
 		type:'POST',
@@ -391,7 +434,7 @@ $(function() {
 			success:function(data) {
 			   return false;
 			}
-	  });
+	  });*/
 	//**********************************************************************************************************************
 	//**********************************************************************************************************************
 	//**********************************************************************************************************************
