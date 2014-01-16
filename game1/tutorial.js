@@ -1,5 +1,6 @@
 // CONSTANTES
 
+
 var PLAYGROUND_WIDTH = 594;
 var PLAYGROUND_HEIGHT = 400; //296;
 var REFRESH_RATE = 15;
@@ -21,8 +22,6 @@ var nextpos = 100;
 var nextpos2 = 100;
 var posjump = 200;
 var jumpstat = 0;
-var $trackerrec = "x100";
-var $trackerplay = "x100";
 var $tp = 1;
 var $tpx = "";
 
@@ -48,18 +47,16 @@ function Player(node) {
             this.grace = false;
             $(this.node).fadeTo(500, 1);
             this.respawnTime = -1;
-        }
-    }
+        };
+    };
     return true;
-}
+};
 
 function obstaculo(node) {
     this.corredor1 = 2;
     this.speedx = -4;
     this.speedy = 0;
     this.node = $(node);
-
-
     // ATUALIZA A POSICAO DO OBSTACULO
     this.update = function(playerNode) {
         this.updateX(playerNode);
@@ -68,23 +65,24 @@ function obstaculo(node) {
     this.updateX = function(playerNode) {
         this.node.x(this.speedx, true);
     };
-
-}
+};
 
 function barreira(node) {
     this.node = $(node);
-
     this.speedy = 1;
     this.alignmentOffset = 210;
-}
+};
+
 barreira.prototype = new obstaculo();
-barreira.prototype.updateY = function(playerNode) {
-    if ((this.node.y() + this.alignmentOffset) > $(playerNode).y()) {
-        this.node.y(this.speedy - 1, true);
-    } else if ((this.node.y() + this.alignmentOffset) < $(playerNode).y()) {
-        this.node.y(this.speedy, true);
-    }
-}
+
+barreira.prototype.updateY = function(playerNode)
+{
+	if ((this.node.y() + this.alignmentOffset) > $(playerNode).y()) {
+		this.node.y(this.speedy - 1, true);
+	} else if ((this.node.y() + this.alignmentOffset) < $(playerNode).y()) {
+		this.node.y(this.speedy, true);
+	};
+};
 
 function Bossy(node) {
     this.node = $(node);
@@ -92,12 +90,14 @@ function Bossy(node) {
     this.speedx = -1;
     this.alignmentOffset = 210;
 }
+
 Bossy.prototype = new barreira();
+
 Bossy.prototype.updateX = function() {
     if (this.node.x() > (PLAYGROUND_WIDTH - 200)) {
-        this.node.x(this.speedx, true)
-    }
-}
+        this.node.x(this.speedx, true);
+    };
+};
 
 // --------------------------------------------------------------------------------------------------------------------
 // --                                      DECLARACAO PRINCIPAL                                                    --
@@ -119,19 +119,54 @@ $(function() {
 
     //CARREGAMENTO DAS OPCOES DO JOGADOR (CONEXAO COM A BASE E ITENS COMPRADOS NA LOJA VIRTUAL)
 
-    var $corcamisa = 1  // 1 a 5 SUBSTITUIR PELO ITEM DA BASE DE DADOS
-    var $tipotenis = 1  // 1 a 5 SUBSTITUIR PELO ITEM DA BASE DE DADOS
-    var $tiposuplemento = 1  // 1 a 5 SUBSTITUIR PELO ITEM DA BASE DE DADOS
-    var $tipotrapaca = 2  // 1 a 5 SUBSTITUIR PELO ITEM DA BASE DE DADOS
-    var $nomejogador = "Player"; // SUBSTITUIR PELO DA BASE DE DADOS
+    // SUBSTITUIR PELO ITENS DA SESSION
+	var $nomejogador = "James";
     var $nomejogadorcpu = "Player 2"; // SUBSTITUIR PELO DA BASE DE DADOS
-    var $usuario = "Usuario Logado;" // SUBSTITUIR PELO DA BASE DE DADOS
+    var $usuario = "Usuario"; // SUBSTITUIR PELO DA BASE DE DADOS
     var $ultimaposicao = 1; // SUBSTITUIR PELO DA BASE DE DADOS
     var $urlfotoplayer = "http://localdafoto/foto.png"; // SUBSTITUIR PELO DA BASE DE DADOS
     var $cor_rgb = "255x255x255"; // SUBSTITUIR PELO DA BASE DE DADOS
     var $premio = 5000; // PREMIO POR GANHAR A CORRIDA - PERDE 100 A CADA IMPACTO
-
-    /*--------------------------------------------------------------------------------------------------------------------------*/
+           
+    var $idcamisa = 1; // ID 1 a 5 - CATEGORIA CAMISA (ID SELECIONADO PARA ESTA CORRIDA)
+    switch  ($idcamisa)
+    {
+    	case 1:	$corcamisa = 1;	break; //Database 'dbdecathlon.itens' {"id_itens": 1,"descricao": "Camisa vermelha","valor": 0,"categoria": "camisa","path_image_item": "game1/camisa1.png"},
+    	case 2:	$corcamisa = 2;	break; //Database 'dbdecathlon.itens' {"id_itens": 2,"descricao": "Camisa Amarela","valor": 0,"categoria": "camisa","path_image_item": "game1/camisa2.png"},
+    	case 3:	$corcamisa = 3;	break; //Database 'dbdecathlon.itens' {"id_itens": 3,"descricao": "Camisa Azul","valor": 0,"categoria": "camisa","path_image_item": "game1/camisa3.png"},
+    	case 5:	$corcamisa = 4;	break; //Database 'dbdecathlon.itens' {"id_itens": 4,"descricao": "Camisa Verde","valor": 0,"categoria": "camisa","path_image_item": "game1/camisa4.png"},
+    	case 6:	$corcamisa = 5;	break; //Database 'dbdecathlon.itens' {"id_itens": 5,"descricao": "Camisa Rosa","valor": 0,"categoria": "camisa","path_image_item": "game1/camisa5.png"},	
+    };
+    
+    var $tipotenis = 6;  // ID 6 a 10 CATEGORIA TENIS (ID SELECIONADO PARA ESTA CORRIDA)
+    switch  ($tipotenis)
+    {   
+		case 6:	$tipotenis = 1; break; //Database 'dbdecathlon.itens' {"id_itens": 6,"descricao": "Tenis Normal","valor": 0,"categoria": "tenis","path_image_item": "game1/tipotenis1.png"}, 
+		case 7:	$tipotenis = 2; break; //Database 'dbdecathlon.itens' {"id_itens": 7,"descricao": "Tenis Veloz","valor": 2000,"categoria": "tenis","path_image_item": "game1/tipotenis2.png"}, 
+		case 8:	$tipotenis = 3; break; //Database 'dbdecathlon.itens' {"id_itens": 8,"descricao": "Tenis Hiper-veloz","valor": 5000,"categoria": "tenis","path_image_item": "game1/tipotenis3.png"}, 
+		case 9:	$tipotenis = 4; break; //Database 'dbdecathlon.itens' {"id_itens": 9,"descricao": "Tenis Aderente","valor": 7000,"categoria": "tenis","path_image_item": "game1/tipotenis4.png"}, 
+		case 10: $tipotenis = 5; break;  //Database 'dbdecathlon.itens' {"id_itens": 10,"descricao": "Tenis Hiper-aderente","valor": 10000,"categoria": "tenis","path_image_item": "game1/tipotenis5.png"},    	
+    };
+    
+    var $idsuplemento = 11;  // ID 11 a 15 CATEGORIA SUPLEMENTO (ID SELECIONADO PARA ESTA CORRIDA)
+    switch  ($idsuplemento)
+    {   
+		case 11:	$tiposuplemento = 1; break; //Database 'dbdecathlon.itens' {"id_itens": 11,"descricao": "Água","valor": 0,"categoria": "suplemento","path_image_item": "game1/suplemento1.png"}, 
+		case 12:	$tiposuplemento = 2; break; //Database 'dbdecathlon.itens' {"id_itens": 12,"descricao": "Vitaminas","valor": 3000,"categoria": "suplemento","path_image_item": "game1/suplemento2.png"}, 
+		case 13:	$tiposuplemento = 3; break; //Database 'dbdecathlon.itens' {"id_itens": 13,"descricao": "Energético","valor": 7000,"categoria": "suplemento","path_image_item": "game1/suplemento3.png"}, 
+		case 14:	$tiposuplemento = 4; break; //Database 'dbdecathlon.itens' {"id_itens": 14,"descricao": "Feijão mexicano","valor": 10000,"categoria": "suplemento","path_image_item": "game1/suplemento4.png"},
+		case 15:	$tiposuplemento = 5; break; //Database 'dbdecathlon.itens' {"id_itens": 15,"descricao": "Anabolizante","valor": 15000,"categoria": "suplemento","path_image_item": "game1/suplemento5.png"},
+	};
+	
+    var $idtrapaca = 16;  // ID 16 a 20 CATEGORIA TRAPAÇA (ID SELECIONADO PARA ESTA CORRIDA)
+    switch  ($idtrapaca)
+    {   
+		case 16:	$tipotrapaca = 1; break; //Database 'dbdecathlon.itens' {"id_itens": 16,"descricao": "Anjo","valor": 0,"categoria": "trapaca","path_image_item": "game1/tipotrapaca1.png"}, 
+		case 17:	$tipotrapaca = 2; break; //Database 'dbdecathlon.itens' {"id_itens": 17,"descricao": "Empurrão","valor": 10000,"categoria": "trapaca","path_image_item": "game1/tipotrapaca2.png"}, 
+		case 18:	$tipotrapaca = 3; break; //Database 'dbdecathlon.itens' {"id_itens": 18,"descricao": "Rouba trapaça","valor": 20000,"categoria": "trapaca","path_image_item": "game1/tipotrapaca3.png"}, 
+		case 19:	$tipotrapaca = 4; break; //Database 'dbdecathlon.itens' {"id_itens": 19,"descricao": "Desliza","valor": 20000,"categoria": "trapaca","path_image_item": "game1/tipotrapaca4.png"},
+		case 20:	$tipotrapaca = 5; break; //Database 'dbdecathlon.itens' {"id_itens": 20,"descricao": "Cria barreira","valor": 30000,"categoria": "trapaca","path_image_item": "game1/tipotrapaca5.png"}]
+	};
     /*--------------------------------------------------------------------------------------------------------------------------*/
 
     // ITENS AMOSTRA
@@ -173,8 +208,9 @@ $(function() {
     $("#player")[0].player = new Player($("#player"));
 
     //ESTAS FUNCOES ESCREVEM NA TELA DO JOGO A VIDA A ENERGIA E OUTROS DADOS DOS CORREDORES
-    $("#overlay").append("<div id='corredor1HUD'style='color: blue; bottom: 40px; width: 100px; right : 200px; position: absolute; font-family: verdana, sans-serif;'></div><div id='corredor2HUD'style='color: red; bottom: 40px; width: 100px; position: absolute; right: 50px; font-family: verdana, sans-serif;'></div>")
+    $("#overlay").append("<div id='corredor1HUD'style='color: blue; bottom: 40px; width: 100px; right : 200px; position: absolute; font-family: verdana, sans-serif;'></div><div id='corredor2HUD'style='color: red; bottom: 40px; width: 100px; position: absolute; right: 50px; font-family: verdana, sans-serif;'></div>");
     $("#overlay").append('<div style="position: absolute; top: 0px; right: 20px; color: white; font-family: verdana, sans-serif;"><center><h1>PREMIO</h1><h1><a style="cursor: pointer; color: yellow;" id="mensagemcentral"></a></h1></center></div>');
+
     // ESTIPULA O TAMANHO DA BARRA DE CARREGAMENTO
     $.loadCallback(function(percent) {
         $("#loadingBar").width(400 * percent);
@@ -187,7 +223,18 @@ $(function() {
                 //$(this).remove();
             });
         });
-    })
+    });
+
+	//CARREGA AS VARIAVEIS QUE SERAO UTILIZADAS PELO AJAX PARA GRAVAR O TRACKER ********************************************
+	//**********************************************************************************************************************
+	//**********************************************************************************************************************
+			  var now = new Date();
+			  var Filename = $usuario+now.getHours()+'.dl2'; 
+			  var PlayerTrack = 'x100y400';
+			  var dataString = 'nameoffile='+Filename+'&tracker='+PlayerTrack;
+	//**********************************************************************************************************************
+	//**********************************************************************************************************************
+	//**********************************************************************************************************************
 
     // ESTA E A FUNCAO QUE CONTROLA A MAIORIA DOS EVENTOS DO JOGO
     $.playground().registerCallback(function() {
@@ -198,12 +245,12 @@ $(function() {
                 $("#player")[0].player.update();
 
                 if (jQuery.gameQuery.keyTracker[37] && jumpstat == 0) { // PRESSIONA BOTAO ESQUERDA(a)
-                    teclas_apoio_p1 = 2
+                    teclas_apoio_p1 = 2;
                 } else if (jQuery.gameQuery.keyTracker[39] && jumpstat == 0) { // PRESSIONA BOTAO DIREITA(a)
-                    teclas_apoio_p1--
+                    teclas_apoio_p1--;
                 }
                 if (teclas_apoio_p1 == 1) { // VALIDA
-                    teclas_apoio_p1 = 0
+                    teclas_apoio_p1 = 0;
                     if ($tipotenis == 1 || $tipotenis == 4 || $tipotenis == 5)
                         nextpos = $("#player").x() + 5; // CASO TIPO DE TENIS = 1,4 ou 5 (NORMAL)
                     if ($tipotenis == 2)
@@ -217,7 +264,6 @@ $(function() {
                     if (nextpos < PLAYGROUND_WIDTH) { // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A ESQUERDA
                         $("#player").x(nextpos);
                     }
-                    $trackerrec = $trackerrec + "x" + nextpos;
                 }
 
                 if (jQuery.gameQuery.keyTracker[27]) { // PLAYER 2 MANUAL
@@ -263,22 +309,20 @@ $(function() {
             {
                 posjump = posjump - 3;
                 $("#player").y(posjump);
-                $trackerrec = $trackerrec + "y" + posjump;
             }
             if ($tiposuplemento == 4)
                 if (posjump < 140)
                     jumpstat = 2; // CASO SUMPLEMENTO == 4 (PULOS MAIS ALTOS)
             if ($tiposuplemento == 5)
                 if (posjump < 130)
-                    jumpstat = 2; // CASO SUMPLEMENTO == 4 (PULOS MAIS ALTOS)
+                    jumpstat = 2; // CASO SUMPLEMENTO == 5 (PULOS AINDA MAIS ALTOS)
             if ($tiposuplemento != 4 && $tiposuplemento != 5)
                 if (posjump < 160)
-                    jumpstat = 2; // CASO SUMPLEMENTO == 4 (PULOS MAIS ALTOS)
+                    jumpstat = 2; // CASO SUMPLEMENTO == 1 2 ou 3
             if (jumpstat == 2)
             {
                 posjump = posjump + 3;
                 $("#player").y(posjump);
-                $trackerrec = $trackerrec + "y" + posjump;
             }
             if (posjump == 200)
                 jumpstat = 0;
@@ -297,7 +341,7 @@ $(function() {
                 var collided = $(this).collision("#playerBody,." + $.gQ.groupCssClass);
                 if (collided.length > 0) {
                     if (jumpstat == 0) // CASO ESTEJA PULANDO NAO QUEBRA A BARREIRA
-                    {
+                  	{
                         $(this).setAnimation(obstaculos[0]["explode"], function(node) {
                             $(node).remove();
                         });
@@ -317,22 +361,41 @@ $(function() {
                         $("#player").x(nextpos);
                     }
                 }
+                
                 var collided2 = $(this).collision("#player2Body,." + $.gQ.groupCssClass);
                 if (collided2.length > 0) {
                     $(this).setAnimation(obstaculos[0]["explode"], function(node) {
-                        $(node).remove();
+                    	$(node).remove();
                     });
                     $(this).css("width", 210);
                     $(this).removeClass("obstaculo");
                     // E FORCADO A PERDER VELOCIDADE VOLTANDO 1 PONTO PARA ESQUERDA
                     nextpos2 = $("#player2").x() - 50;
-
+                    
                     if (nextpos2 > 0) { // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A ESQUERDA
                         $("#player2").x(nextpos2);
                     }
                 }
+                
             });
         }
+	//***************************************************  TRACKER *******************************************************
+	//**********************************************************************************************************************
+	//********************************************************************************************************************** 
+    PlayerTrack = 'x'+$("#player").x()+'y'+$("#player").y();
+   	dataString = 'nameoffile='+'PARTIDAS/'+Filename+'&tracker='+PlayerTrack;
+	  $.ajax({
+		type:'POST',
+		data:dataString,
+		url:'rectrack.php',
+			success:function(data) {
+			   return false;
+			}
+	  });
+	//**********************************************************************************************************************
+	//**********************************************************************************************************************
+	//**********************************************************************************************************************
+        
     }, REFRESH_RATE);
 
     //ESTA FUN��O CRIA AS BARREIRAS ALEATORIAMENTE

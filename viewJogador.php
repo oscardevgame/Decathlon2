@@ -34,11 +34,11 @@ $listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]
 <div class="col-md-4 col-sm-4">
     <div class="news">
         <div class="letter">
-            Olá <?php echo $_SESSION["nome"] ?>
+            Olï¿½ <?php echo $_SESSION["nome"] ?>
         </div>
         <hr/>
         <div class="letter">
-            Itens disponíveis:
+            Itens disponï¿½veis:
             <table class="table table-hover" id="tableItensDisp">
                 <tr>
                     <th></th>
@@ -67,7 +67,7 @@ $listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]
             Partidas Realizadas:
         </div>
         <div class="letter">
-            Corridas Disponíveis:
+            Corridas Disponï¿½veis:
         </div>
     </div>    
 </div>
