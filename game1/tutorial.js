@@ -24,6 +24,7 @@ var posjump = 200;
 var jumpstat = 0;
 var $tp = 1;
 var $tpx = "";
+var idPartidaAtual = "";
 
 //variaveis para manipulacao do tracker
 var playerposicaoarray = new Array();
@@ -116,7 +117,7 @@ $(function() {
     $("#startbutton").click(function() {
         $.playground().startGame(function() {
             $("#welcomeScreen").fadeTo(1000, 0, function() {
-                //Obter o tracker
+                /*Obter o tracker
                 partida={partidaId:31};
                 $.ajax({
                     dataType: "json",
@@ -133,11 +134,30 @@ $(function() {
                         console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
                     }
                 });
-                
+                */
+                /* Incluir uma partida com novo tracker*/
+                tracker = [[1,2],[3,4],[5,6],[7,8]];
+                partida={pontuacao:"5000",dataTracker:tracker,idPartidaAtual:idPartidaAtual};
+                $.ajax({
+                    url: "controllerInserePartida.php",
+                    data: partida ,
+                    type: 'POST',
+                    datatype:'json',
+                    complete:function( jqXHR, textStatus){
+                        console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  JSON.stringify(jqXHR));
+                        var row = "<tr><td>"+jqXHR.responseJSON['dataHora']+"</td><td>"+jqXHR.responseJSON['pontuacao']+"</td></tr>";
+                        $("#tablePartidasUsuario").closest('table').prepend(row);
+                        idPartidaAtual = jqXHR.responseJSON['idPartida'];
+                        //$("#startbutton").attr("disabled", true);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
+                        alert('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
+                    }
+                });
             });
         });
     });
-
 
     // CARREGA CENARIO
     var background1 = new $.gQ.Animation({imageURL: "game1/background1.png"});

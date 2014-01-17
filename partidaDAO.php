@@ -87,7 +87,7 @@ class partidaDAO{
 	    $conexao->conectar();
 
 	    # Executa comando SQL
-	    $stmt = $conexao->pdo->prepare('SELECT id_partida, id_usuario, data, path_file_tracker FROM partida WHERE id_partida = ? ');
+	    $stmt = $conexao->pdo->prepare('SELECT id_partida, id_usuario, data, path_file_tracker, pontuacao FROM partida WHERE id_partida = ? ');
 
 	    # Passando os valores a serem usados
     	$dados = array($pk);
@@ -170,6 +170,43 @@ class partidaDAO{
 
 		return $retorno;
 	}
+/*
+    * Obtem todos
+    */
+    public function ObterPorUsuario($idUsuario){
 
+    	# Faz conexao
+    	$conexao = new conexaoBanco();
+    	$conexao->conectar();
+
+    	# Executa comando SQL
+    	$stmt = $conexao->pdo->prepare('SELECT id_partida, id_usuario, data, path_file_tracker, pontuacao FROM partida WHERE id_usuario = ? ORDER BY id_partida DESC');
+
+        $dados = array($idUsuario);
+    	
+    	// Executa Query
+    	$stmt->execute($dados);
+    	$retorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    	$lista = array();
+    	$i = 0;
+
+    	foreach( $retorno as $row ){
+    		#Inst�ncia da entidade
+    		$partidaBE = new partidaBE();
+
+    		#Atribui valores
+                $partidaBE->setId_partida($row['id_partida']);
+                $partidaBE->setId_usuario($row['id_usuario']);
+                $partidaBE->setData($row['data']);
+                $partidaBE->setPontuacao($row['pontuacao']);
+                $partidaBE->setPath_file_tracker($row['path_file_tracker']);
+
+    		$lista[$i] = $partidaBE;
+    		$i++;
+    	}
+
+    	return $lista;
+    }
 }
 ?>

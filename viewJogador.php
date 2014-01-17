@@ -6,14 +6,18 @@ $navLinks = array("Home" => "index.php", "Loja" => "viewLoja.php");
 include_once 'templateHead.php';
 include_once 'templateBodyHeaderContainer.php';
 include_once 'controllerItens.php';
+include_once 'controllerPartidas.php';
 include_once 'itensBE.php';
 include_once 'itens_powerBE.php';
 include_once 'usuario_itensDAO.php';
 include_once 'usuario_itensBE.php';
+include_once 'partidaDAO.php';
 
 $controllerItens = new itensController();
-$listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]);
+$controllerPartidas = new partidaController();
 
+$listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]);
+$listPartidasUsusario = $controllerPartidas->listPartidasPorUsuario($_SESSION["idUsuario"]);
 ?>
 <script> 
   $(function(){
@@ -34,11 +38,11 @@ $listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]
 <div class="col-md-4 col-sm-4">
     <div class="news">
         <div class="letter">
-            Olï¿½ <?php echo $_SESSION["nome"] ?>
+            Olá <?php echo $_SESSION["nome"] ?>
         </div>
         <hr/>
         <div class="letter">
-            Itens disponï¿½veis:
+            Itens disponíveis:
             <table class="table table-hover" id="tableItensDisp">
                 <tr>
                     <th></th>
@@ -64,10 +68,28 @@ $listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]
             </table>
         </div>
         <div class="letter">
-            Partidas Realizadas:
+            Minhas Partidas:
+            <div class="news" style="overflow-y: auto; height: 200px">
+                <table class="table table-hover" id="tablePartidasUsuario">
+                    <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>pontuacao</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($listPartidasUsusario as $key => $value) { ?>
+                        <tr>
+                            <td><?php echo $value->getData() ?></td>
+                            <td><?php echo $value->getPontuacao() ?></td>
+                        </tr>
+                    <?php } ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="letter">
-            Corridas Disponï¿½veis:
+            Corridas Disponíveis:
         </div>
     </div>    
 </div>
