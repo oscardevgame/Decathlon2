@@ -1,7 +1,7 @@
 <?php
 #########################################
 # CTASoftware                           #
-# Autor: Everton Gon�alves              #
+# Autor: Everton Goncalves              #
 # http://www.ctasoftware.com.br         #
 # E-mail: everton@ctasoftware.com.br    #
 #########################################

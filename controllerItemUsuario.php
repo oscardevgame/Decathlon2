@@ -1,8 +1,6 @@
 <?php
+include_once 'verificaSessao.php';
 
-if (session_status() != PHP_SESSION_ACTIVE) {
-    session_start();
-}
 include_once 'usuario_itensBE.php';
 include_once 'usuario_itensDAO.php';
 

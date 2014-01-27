@@ -1,8 +1,6 @@
 <?php
+include_once 'verificaSessao.php';
 
-if (session_status() != PHP_SESSION_ACTIVE) {
-    session_start();
-}
 include_once 'usuariosBE.php';
 include_once 'perfisBE.php';
 include_once 'perfil_usuarioBE.php';

@@ -1,7 +1,5 @@
 <?php
-if (session_status() != PHP_SESSION_ACTIVE) {
-    session_start();
-}
+include_once 'verificaSessao.php';
 
 include_once '../persistence/daos/powerDAO.php';
 include_once '../persistence/daos/entidades/powerBE.php';

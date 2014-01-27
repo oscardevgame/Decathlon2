@@ -1,13 +1,11 @@
 <?php
+	include_once 'verificaSessao.php';
+
     require_once 'perfil_usuarioDAO.php';
     require_once 'perfil_usuarioBE.php';
     require_once 'usuariosBE.php';
     require_once 'perfisBE.php';
     
-    if(session_status() != PHP_SESSION_ACTIVE){
-        session_start();
-    }
-
     $mensagens = Array();
     $email = isset($_POST["email"]) ? addslashes(trim($_POST["email"])) : FALSE;
     //$senha = isset($_POST["senha"]) ? md5(trim($_POST["senha"])) : FALSE;

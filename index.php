@@ -1,5 +1,5 @@
 <?php
-include_once 'ConexaoBanco.php';
+include_once 'conexaoBanco.php';
 include_once 'usuariosDAO.php';
 include_once 'usuariosBE.php';
 
