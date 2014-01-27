@@ -14,21 +14,24 @@ $senha = filter_input(INPUT_POST, 'senha');
 $senhaConfirm = filter_input(INPUT_POST, 'senhaConfirm');
 $facebook = filter_input(INPUT_POST, 'facebook');
 
-if (empty(trim($senha))) {
+$senha = trim($senha);
+if (empty($senha)) {
     $message = "O campo senha é obrigatório!";
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
     header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
     return;
 }
 
-if (empty(trim($nome))) {
+$nome = trim($nome);
+if (empty($nome)) {
     $message = "O campo nome é obrigatório!";
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
     header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
     return;
 }
 
-if (empty(trim($email))) {
+$email = trim($email);
+if (empty($email)) {
     $message = "O campo nome é obrigatório!";
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
     header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
