@@ -17,9 +17,9 @@ class conexaoBanco{
 
 	public function conectar(){
 		if (strpos($_SERVER['SERVER_NAME'], 'decathlon.bl.ee') !== false) {
-			conectarRemoto;
+			$this->conectarRemoto();
 		}else{
-			conectarLocal;
+			$this->conectarLocal();
 		}
 	}
 	
