@@ -1,0 +1,1 @@
+{"partidaId":"31"}{"pontuacao":"5000","dataTracker":{"partidaId":"31"},"idPartidaAtual":""}

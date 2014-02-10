@@ -23,7 +23,7 @@ var gameOver = false;
 var teclas_apoio_p1 = 0;
 var nextpos = 100;
 var nextpos2 = 100;
-var posjump = 230;
+var posjump = 210;
 var jumpstat = 0;
 var $tp = 1;
 var $tpx = "";
@@ -32,12 +32,12 @@ var idPartidaAtual = "";
 // // --------------------------------------VARIAVEIS PARA A MANIPULACAO DA GRAVACAO DO TRACKER 
 var playerposicaoarray = new Array();
 var posxyp1 =0;
-var gravou = 0;
+var gravou;// = 0;
 
 // // --------------------------------------VALIAVEIS PARA A MANIPULACAO E LEITURA DO TRACKER PARA PLAYER 2 VIRTUAL
 var player2posicaoarray = new Array();
 var posxyp2 =0;
-var carregou = 0;
+var carregou;// = 0;
 
 
 // ------------------------------------------FUNCOES E MINI CLASSES
@@ -117,70 +117,48 @@ Bossy.prototype.updateX =	function() {
 // --                                      DECLARACAO PRINCIPAL                                                    --
 // --------------------------------------------------------------------------------------------------------------------
 
+var $premio = 5000;
+
 $(function(){
 	$("#startbutton").click(function() {// // -------------------------------------FUNCAO DO BOTAO INICIAR DO JOGO
 		$.playground().startGame(function() {
+			// Incluir uma partida com novo tracker
 			$("#welcomeScreen").fadeTo(1000, 0, function() {
-				/* Incluir uma partida com novo tracker*/
-				tracker = partida;
-				partida={
-					pontuacao:"5000",dataTracker:tracker,idPartidaAtual:idPartidaAtual
-				};
-				$.ajax({
-					url: "controllerInserePartida.php",
-					data: partida ,
-					type: 'POST',
-					datatype:'json',
-					
-					complete:
-					function( jqXHR, textStatus){
-						console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  JSON.stringify(jqXHR));
-						var row = "<tr><td>"+jqXHR.responseJSON['dataHora']+"</td><td>"+jqXHR.responseJSON['pontuacao']+"</td></tr>";
-						$("#tablePartidasUsuario").closest('table').prepend(row);
-						idPartidaAtual = jqXHR.responseJSON['idPartida'];
-						//$("#startbutton").attr("disabled", true);
-					 },
-					 
-					 error:
-					 function(jqXHR, textStatus, errorThrown) {
-							 console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
-							 ('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
-					 }
-				});
-			});
-		});
-
-	$.playground().startGame(function() {
-		$("#welcomeScreen").fadeTo(1000, 0, function() {
-			//Obter o tracker
+				
+				if (carregou == 1)
+				{
+					carregou = 0;
+					gravou = 0;
+					window.location.reload();
+				}
+				else
+				{
+					partida={partidaId:31};
+					$.ajax({
+						dataType: "json",
+						url: "controllerRecuperaPartida.php",
+						data: partida ,
+						type: 'POST',
+						
+						sucess:
+						function(retorno, textStatus, jqXHR){
+							console.log("SUCESSO: \nretorno: " + retorno + "\ntext: " + textStatus + "\njqXHR: " + jqXHR);
+						},
+						
+						complete:
+							function( jqXHR, textStatus){
+							console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  jqXHR.responseText);
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
+						}
+					});
+					player2posicaoarray = partida;
+					carregou = 1;
+				}
+   			});
 		});
 	});
-
-	if (carregou == 0){
-		partida={partidaId:31};
-		$.ajax({
-			dataType: "json",
-			url: "controllerRecuperaPartida.php",
-			data: partida ,
-			type: 'POST',
-			
-			sucess:
-			function(retorno, textStatus, jqXHR){
-				console.log("SUCESSO: \nretorno: " + retorno + "\ntext: " + textStatus + "\njqXHR: " + jqXHR);
-			},
-			
-			complete:
-				function( jqXHR, textStatus){
-				console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  jqXHR.responseText);
-			},
-			error: function(jqXHR, textStatus, errorThrown) {
-				console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
-			}
-		});
-		player2posicaoarray = partida;
-		carregou = 1;
-	}
-});
 
 // ----------------------------------------------CARREGA CENARIO
 
@@ -199,13 +177,13 @@ playerAnimation["PLAYER2CORRE"] = new $.gQ.Animation({imageURL: "game1/competido
 //CARREGAMENTO DAS OPCOES DO JOGADOR (CONEXAO COM A BASE E ITENS COMPRADOS NA LOJA VIRTUAL)
 
 // SUBSTITUIR PELO ITENS DA SESSION
-var $nomejogador = "James";
+var $nomejogador = "Player 1"; //DEFINIDO NA CHAMADA DO AJAX
 var $nomejogadorcpu = "Player 2"; // SUBSTITUIR PELO DA BASE DE DADOS
 var $usuario = "Usuario"; // SUBSTITUIR PELO DA BASE DE DADOS
 var $ultimaposicao = 1; // SUBSTITUIR PELO DA BASE DE DADOS
 var $urlfotoplayer = "http://localdafoto/foto.png"; // SUBSTITUIR PELO DA BASE DE DADOS
 var $cor_rgb = "255x255x255"; // SUBSTITUIR PELO DA BASE DE DADOS
-var $premio = 5000; // PREMIO POR GANHAR A CORRIDA - PERDE 100 A CADA IMPACTO
+//var $premio = 5000; // PREMIO POR GANHAR A CORRIDA - PERDE 100 A CADA IMPACTO
 		       
 var $idcamisa = 1; // ID 1 a 5 - CATEGORIA CAMISA (ID SELECIONADO PARA ESTA CORRIDA)
 switch  ($idcamisa)
@@ -275,14 +253,14 @@ $.playground().addGroup("background", {width: PLAYGROUND_WIDTH, height: PLAYGROU
 .addSprite("tipotrapaca", {animation: playerAnimation["TIPOTRAPACA"], posx: 180, posy: 300, width: 60, height: 60})
 .end()
 
-.addGroup("player2", {posx: 115, posy: 195, width: 64, height: 64})
+.addGroup("player2", {posx: 115, posy: 205, width: 64, height: 64})
 .addSprite("player2Body", {animation: playerAnimation["PLAYER2CORRE"], posx: 0, posy: 0, width: 64, height: 64})
 .end()
 
 .addGroup("actors", {width: PLAYGROUND_WIDTH, height: PLAYGROUND_HEIGHT})
 .end()
 
-.addGroup("player", {posx: 100, posy: 230, width: 64, height: 64})
+.addGroup("player", {posx: 100, posy: 210, width: 64, height: 64})
 .addSprite("playerBody", {animation: playerAnimation["PLAYER1CORRE"], posx: 0, posy: 0, width: 64, height: 64})
 .end()
 
@@ -325,24 +303,6 @@ $.playground().registerCallback(
 				}
 			}
 
-			//if (jQuery.gameQuery.keyTracker[27]) { // PLAYER 2 MANUAL
-			//if(mid($trackerplay,$tp,1)=="x"){ // PLAYER 2 AUTOMATICO
-			//    var nextpos2 = $("#player2").x() + 1; // // POSICAO ATUAL DE PLAYER 2 - MANUAL
-			//$tp++;
-			//$tpx = "";
-			//while (mid($trackerplay,$tp,1)!="x")
-			//{
-			//	$tpx = $tpx + mid($trackerplay,$tp,1);
-			//	$tp++;
-			//}
-			
-			//var nextpos2 = val($tpx); // POSICAO ATUAL DE PLAYER 2 - AUTOMATICO					
-			
-			//    if (nextpos2 < PLAYGROUND_WIDTH) { // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A DIREITA (SOMENTE MANUAL)
-			  //      $("#player2").x(nextpos2); // SOMENTE MANUAL
-			  //  } // SOMENTE MANUAL
-			//}
-
 			if ($("#player").x() > $("#player2").x()) {
 				$("#corredor1HUD").html($nomejogador + " " + "Posicao 1 " + " ** " + $("#player").x());
 				$("#corredor2HUD").html($nomejogadorcpu + " " + "Posicao 2 " + " >> " + $("#player2").x());
@@ -360,7 +320,7 @@ $.playground().registerCallback(
 			}
 		}
 //------------------------------------- LOGICA DO SALTO SOBRE AS BARREIRAS ---------------------------------------------
-		if (jQuery.gameQuery.keyTracker[13] && posjump == 230)	{
+		if (jQuery.gameQuery.keyTracker[13] && posjump == 210)	{
 			jumpstat = 1;
 		}
 
@@ -370,18 +330,18 @@ $.playground().registerCallback(
 		}
 
 		if ($tiposuplemento == 4)
-		if (posjump < 170) jumpstat = 2; // CASO SUMPLEMENTO == 4 (PULOS MAIS ALTOS)
+		if (posjump < 150) jumpstat = 2; // CASO SUMPLEMENTO == 4 (PULOS MAIS ALTOS)
 		if ($tiposuplemento == 5)
-		if (posjump < 160) jumpstat = 2; // CASO SUMPLEMENTO == 5 (PULOS AINDA MAIS ALTOS)
+		if (posjump < 140) jumpstat = 2; // CASO SUMPLEMENTO == 5 (PULOS AINDA MAIS ALTOS)
 		if ($tiposuplemento != 4 && $tiposuplemento != 5)
-		if (posjump < 190) jumpstat = 2; // CASO SUMPLEMENTO == 1 2 ou 3
+		if (posjump < 170) jumpstat = 2; // CASO SUMPLEMENTO == 1 2 ou 3
 
 		if (jumpstat == 2)	{
 			posjump = posjump + 3;
 			$("#player").y(posjump);
 		}
 
-		if (posjump == 230) jumpstat = 0;
+		if (posjump == 210) jumpstat = 0;
 		//--------------------------------------------------------------------------------------------------------------------
 
 			//ATUALIZA A COLISAO DAS BARREIRAS COM O CORREDOR
@@ -454,20 +414,20 @@ $.playground().registerCallback(
 	$.playground().registerCallback(
 		function() {
 			if (!gameOver) { // SE AINDA NÃO HOUVER VENCEDOR
-				if (Math.random() < 0.5) {
-					var name = "obstaculo1_" + Math.ceil(Math.random() * 1000);
-					$("#actors").addSprite(name, {animation: obstaculos[0]["idle"], posx: PLAYGROUND_WIDTH, posy: 230, width: 16, height: 64});
-					$("#" + name).addClass("obstaculo");
-					$("#" + name)[0].obstaculo = new barreira($("#" + name));
-				}
+				//if (Math.random() < 0.5) {
+				var name = "obstaculo1_" + Math.ceil(Math.random() * 1000);
+				$("#actors").addSprite(name, {animation: obstaculos[0]["idle"], posx: PLAYGROUND_WIDTH, posy: 210, width: 16, height: 64});
+				$("#" + name).addClass("obstaculo");
+				$("#" + name)[0].obstaculo = new barreira($("#" + name));
+				//}
 			} else { // SE UM DOS PLAYERS TIVER TERMIDADO A PARTIDA
 				$("#playground").append('<div style="position: absolute; top: 50px; width: 570px; color: white; font-family: verdana, sans-serif;"><center><h1>Game Over</h1><br><a style="cursor: pointer;" id="restartbutton">FIM DE JOGO</a></center></div>');
 				$("#restartbutton").click(restartgame);
 
 				//Incluir uma partida com novo tracker
 				if (gravou == 0) {
-					tracker = playerposicaoarray;
-					partida={pontuacao:$premio,dataTracker:tracker};
+					$tracker = playerposicaoarray;
+					partida = {pontuacao:$premio,dataTracker:$tracker};
 					$.ajax({
 						dataType: "json",
 						url: "controllerInserePartida.php",
@@ -486,10 +446,9 @@ $.playground().registerCallback(
 					});
 					gravou = 1;
 				}
-				window.location.reload();
 			}
-		}, 1000	
-	); //UMA POR SEGUNDO
+		}, 2000	//UMA BARREIRA A CADA 2 SEGUNDOS 
+	); 
 	
 //---------------------------------------------------ANIMAÇÃO DO CENARIO-----------------------------------------------------------
 	$.playground().registerCallback(
