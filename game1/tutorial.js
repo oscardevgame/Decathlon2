@@ -32,7 +32,7 @@ var idPartidaAtual = "";
 // // --------------------------------------VARIAVEIS PARA A MANIPULACAO DA GRAVACAO DO TRACKER 
 var playerposicaoarray = new Array();
 var posxyp1 =0;
-var gravou;// = 0;
+var gravou = 0;
 
 // // --------------------------------------VALIAVEIS PARA A MANIPULACAO E LEITURA DO TRACKER PARA PLAYER 2 VIRTUAL
 var player2posicaoarray = new Array();
@@ -129,15 +129,17 @@ $(function(){
 				{
 					carregou = 0;
 					gravou = 0;
+					posxyp1 = 0;
+					posxyp2 = 0;
 					window.location.reload();
 				}
 				else
 				{
-					partida={partidaId:31};
+						//partida={partidaId:31};
 					$.ajax({
 						dataType: "json",
 						url: "controllerRecuperaPartida.php",
-						data: partida ,
+						data: partida,
 						type: 'POST',
 						
 						sucess:
@@ -149,7 +151,8 @@ $(function(){
 							function( jqXHR, textStatus){
 							console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  jqXHR.responseText);
 						},
-						error: function(jqXHR, textStatus, errorThrown) {
+						error: 
+							function(jqXHR, textStatus, errorThrown) {
 							console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
 						}
 					});
@@ -159,6 +162,11 @@ $(function(){
    			});
 		});
 	});
+
+
+//----------------------- TESTE DE TRACKIN --
+player2posicaoarray = new Array(); 
+//-------------------------------------------
 
 // ----------------------------------------------CARREGA CENARIO
 
@@ -400,12 +408,16 @@ $.playground().registerCallback(
 			);
 		}
 		//***************************************************  TRACKER *******************************************************
-		playerposicaoarray[posxyp1] = [$("#player").x()+","+$("#player").y()];
-		posxyp1=posxyp1+1;
+		playerposicaoarray[posxyp1] = $("#player").x();
+		posxyp1++;
+		playerposicaoarray[posxyp1] = $("#player").y();
+		posxyp1++;
 		
 		//******************************************* RECUPERACAO DO TRACKER P2 **********************************************
-		///////$("#player2").x() = player2posicaoarray[posxyp2];
-		///////posxyp2=posxyp2+1;
+		$("#player2").x(player2posicaoarray[posxyp2]);
+		posxyp2++;
+		$("#player2").y(player2posicaoarray[posxyp2]);
+		posxyp2++;
 		//**********************************************************************************************************************
 	},	REFRESH_RATE
 );
