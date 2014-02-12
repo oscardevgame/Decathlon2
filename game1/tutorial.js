@@ -30,14 +30,14 @@ var $tpx = "";
 var idPartidaAtual = "";
 
 // // --------------------------------------VARIAVEIS PARA A MANIPULACAO DA GRAVACAO DO TRACKER 
-var playerposicaoarray = new Array();
-var posxyp1 =0;
+var gravatracker = new Array();
+var pos1 =0;
+var pos2 =0;
 var gravou = 0;
 
 // // --------------------------------------VALIAVEIS PARA A MANIPULACAO E LEITURA DO TRACKER PARA PLAYER 2 VIRTUAL
-var player2posicaoarray = new Array();
-var posxyp2 =0;
-var carregou;// = 0;
+var carregatracker = new Array();
+var carregou = 0;
 
 
 // ------------------------------------------FUNCOES E MINI CLASSES
@@ -129,17 +129,17 @@ $(function(){
 				{
 					carregou = 0;
 					gravou = 0;
-					posxyp1 = 0;
-					posxyp2 = 0;
+					pos1 =1;
+					pos2 =1;
 					window.location.reload();
 				}
 				else
 				{
-						//partida={partidaId:31};
+					partida={partidaId:31};
 					$.ajax({
 						dataType: "json",
 						url: "controllerRecuperaPartida.php",
-						data: partida,
+						data: partida ,
 						type: 'POST',
 						
 						sucess:
@@ -151,22 +151,16 @@ $(function(){
 							function( jqXHR, textStatus){
 							console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  jqXHR.responseText);
 						},
-						error: 
-							function(jqXHR, textStatus, errorThrown) {
+						error: function(jqXHR, textStatus, errorThrown) {
 							console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
 						}
 					});
-					player2posicaoarray = partida;
+					carregatracker = partida;
 					carregou = 1;
 				}
    			});
 		});
 	});
-
-
-//----------------------- TESTE DE TRACKIN --
-player2posicaoarray = new Array(); 
-//-------------------------------------------
 
 // ----------------------------------------------CARREGA CENARIO
 
@@ -408,17 +402,20 @@ $.playground().registerCallback(
 			);
 		}
 		//***************************************************  TRACKER *******************************************************
-		playerposicaoarray[posxyp1] = $("#player").x();
-		posxyp1++;
-		playerposicaoarray[posxyp1] = $("#player").y();
-		posxyp1++;
-		
+		if (pos2 < 1000){
 		//******************************************* RECUPERACAO DO TRACKER P2 **********************************************
-		$("#player2").x(player2posicaoarray[posxyp2]);
-		posxyp2++;
-		$("#player2").y(player2posicaoarray[posxyp2]);
-		posxyp2++;
+				gravatracker[pos1,pos2] = $("#player").x();
+				$("#player2").x(carregatracker[pos1,pos2]);
+				pos2++;
+				gravatracker[pos1,pos2] = $("#player").y();
+				
+				$("#player2").y(carregatracker[pos1,pos2]);
+				pos2++;
 		//**********************************************************************************************************************
+			}else{
+				pos1++;
+				pos2 = 0;
+		}
 	},	REFRESH_RATE
 );
 
@@ -428,7 +425,7 @@ $.playground().registerCallback(
 			if (!gameOver) { // SE AINDA NÃO HOUVER VENCEDOR
 				//if (Math.random() < 0.5) {
 				var name = "obstaculo1_" + Math.ceil(Math.random() * 1000);
-				$("#actors").addSprite(name, {animation: obstaculos[0]["idle"], posx: PLAYGROUND_WIDTH, posy: 210, width: 16, height: 64});
+				$("#actors").addSprite(name, {animation: obstaculos[0]["idle"], posx: PLAYGROUND_WIDTH, posy: 235, width: 16, height: 64});
 				$("#" + name).addClass("obstaculo");
 				$("#" + name)[0].obstaculo = new barreira($("#" + name));
 				//}
@@ -438,7 +435,7 @@ $.playground().registerCallback(
 
 				//Incluir uma partida com novo tracker
 				if (gravou == 0) {
-					$tracker = playerposicaoarray;
+					$tracker = gravatracker;
 					partida = {pontuacao:$premio,dataTracker:$tracker};
 					$.ajax({
 						dataType: "json",
