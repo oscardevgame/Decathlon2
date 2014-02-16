@@ -30,37 +30,32 @@ var $tpx = "";
 var idPartidaAtual = "";
 
 // // --------------------------------------VARIAVEIS PARA A MANIPULACAO DA GRAVACAO DO TRACKER 
-var gravatracker = new Array();
+var $gravatracker = new Array();
 var pos1 =0;
 var pos2 =0;
-var gravou = 0;
+var $gravou = 0;
 
 // // --------------------------------------VALIAVEIS PARA A MANIPULACAO E LEITURA DO TRACKER PARA PLAYER 2 VIRTUAL
-var carregatracker = new Array();
+var $carregatracker = new Array();
 var carregou = 0;
 
+// ------------------------------------------CONFIGURACAO DO SOM COM SOUND MANAGER
 
-// ------------------------------------------FUNCOES E MINI CLASSES
-
-
-// // ---------------------------------------FUNCAO REINICIAR O JOGO - restartgame()
-function restartgame() {
-    window.location.reload();
-};
+soundManager.debugMode = false;
+// ---------------------------------------FUNCAO REINICIAR O JOGO - restartgame()
 
 // // ---------------------------------------OBJETOS DO JOGO
 function Player(node) {
 	this.node = node;
 	this.grace = false;
 	this.corredor1 = 1;
-	//this.corredor2 = 1;
 	this.respawnTime = -1;
 	this.update = 	function(){    	
-						if ((this.respawnTime > 0) && (((new Date()).getTime() - this.respawnTime) > 3000)){
-							this.grace = false;
-							$(this.node).fadeTo(500, 1);
-							this.respawnTime = -1;
-						};
+//						if ((this.respawnTime > 0) && (((new Date()).getTime() - this.respawnTime) > 3000)){
+//							this.grace = false;
+//							$(this.node).fadeTo(500, 1);
+//							this.respawnTime = -1;
+//						};
 					};
 	return true;
 };
@@ -69,11 +64,9 @@ function Player(node) {
 function obstaculo(node) {
 	this.corredor1 = 2;
 	this.speedx = -4;
-	this.speedy = 0;
 	this.node = $(node);
 	this.update = 	function(playerNode) {
 						this.updateX(playerNode);
-						this.updateY(playerNode);
 					};
 	this.updateX = 	function(playerNode) {
 						this.node.x(this.speedx, true);
@@ -90,28 +83,9 @@ function barreira(node) {
 
 barreira.prototype = new obstaculo();
 
-barreira.prototype.updateY = 	function(playerNode){
-									if ((this.node.y() + this.alignmentOffset) > $(playerNode).y()) {
-										this.node.y(this.speedy - 1, true);
-									} else if ((this.node.y() + this.alignmentOffset) < $(playerNode).y()) {
-										this.node.y(this.speedy, true);
-									};
-								};
-
-function Bossy(node) {
-	this.node = $(node);
-	this.corredor1 = 20;
-	this.speedx = -1;
-	this.alignmentOffset = 210;
-}
-
-Bossy.prototype = new barreira();
-
-Bossy.prototype.updateX =	function() {
-								if (this.node.x() > (PLAYGROUND_WIDTH - 200)) {
-									this.node.x(this.speedx, true);
-								};
-							};
+//barreira.prototype.updateY = 	function(playerNode){
+//									this.node.y(this.speedy - 1, true);
+//								};
 
 // --------------------------------------------------------------------------------------------------------------------
 // --                                      DECLARACAO PRINCIPAL                                                    --
@@ -119,23 +93,24 @@ Bossy.prototype.updateX =	function() {
 
 var $premio = 5000;
 
+// // -------------------------------------FUNCAO DO BOTAO INICIAR DO JOGO
 $(function(){
-	$("#startbutton").click(function() {// // -------------------------------------FUNCAO DO BOTAO INICIAR DO JOGO
+	//var music = new $.gQ.SoundWrapper("music.mp3", true);
+	$("#startbutton").click(function() {
 		$.playground().startGame(function() {
 			// Incluir uma partida com novo tracker
 			$("#welcomeScreen").fadeTo(1000, 0, function() {
 				
-				if (carregou == 1)
-				{
-					carregou = 0;
-					gravou = 0;
-					pos1 =1;
-					pos2 =1;
-					window.location.reload();
-				}
-				else
-				{
-					partida={partidaId:31};
+					if ($gravatracker.length > 64)
+					{
+						for (i=0; i<$gravatracker.length; i++){
+							for (j=0; j<1000; j++){
+								$gravatracker.length[i,j] = 0;
+							}
+						}
+						window.location.reload();
+					}
+					partida={partidaId:$carregatracker}; //partida = {idUsuario:$trackerp2};
 					$.ajax({
 						dataType: "json",
 						url: "controllerRecuperaPartida.php",
@@ -155,13 +130,10 @@ $(function(){
 							console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
 						}
 					});
-					carregatracker = partida;
-					carregou = 1;
-				}
    			});
 		});
 	});
-
+	
 // ----------------------------------------------CARREGA CENARIO
 
 var background1 = new $.gQ.Animation({imageURL: "game1/background1.png"});
@@ -179,12 +151,13 @@ playerAnimation["PLAYER2CORRE"] = new $.gQ.Animation({imageURL: "game1/competido
 //CARREGAMENTO DAS OPCOES DO JOGADOR (CONEXAO COM A BASE E ITENS COMPRADOS NA LOJA VIRTUAL)
 
 // SUBSTITUIR PELO ITENS DA SESSION
-var $nomejogador = "Player 1"; //DEFINIDO NA CHAMADA DO AJAX
+
+var $nomejogador = "x";	//request.getSession().getAttribute("nome"); //DEFINIDO NA CHAMADA DO AJAX
 var $nomejogadorcpu = "Player 2"; // SUBSTITUIR PELO DA BASE DE DADOS
 var $usuario = "Usuario"; // SUBSTITUIR PELO DA BASE DE DADOS
 var $ultimaposicao = 1; // SUBSTITUIR PELO DA BASE DE DADOS
 var $urlfotoplayer = "http://localdafoto/foto.png"; // SUBSTITUIR PELO DA BASE DE DADOS
-var $cor_rgb = "255x255x255"; // SUBSTITUIR PELO DA BASE DE DADOS
+//var $cor_rgb = "255x255x255"; // SUBSTITUIR PELO DA BASE DE DADOS
 //var $premio = 5000; // PREMIO POR GANHAR A CORRIDA - PERDE 100 A CADA IMPACTO
 		       
 var $idcamisa = 1; // ID 1 a 5 - CATEGORIA CAMISA (ID SELECIONADO PARA ESTA CORRIDA)
@@ -275,11 +248,11 @@ $("#overlay").append("<div id='corredor1HUD'style='color: blue; bottom: 40px; wi
 $("#overlay").append('<div style="position: absolute; top: 0px; right: 20px; color: white; font-family: verdana, sans-serif;"><center><h1>PREMIO</h1><h1><a style="cursor: pointer; color: yellow;" id="mensagemcentral"></a></h1></center></div>');
 
 // ESTIPULA O TAMANHO DA BARRA DE CARREGAMENTO
-$.loadCallback(
-	function(percent) {
-		$("#loadingBar").width(300 * percent);
-	}
-);
+//$.loadCallback(
+//	function(percent) {
+	//	$("#loadingBar").width(500 * percent);
+//	}
+//);
 
 // ESTA E A FUNCAO QUE CONTROLA A MAIORIA DOS EVENTOS DO JOGO
 $.playground().registerCallback(
@@ -322,8 +295,20 @@ $.playground().registerCallback(
 			}
 		}
 //------------------------------------- LOGICA DO SALTO SOBRE AS BARREIRAS ---------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
+
 		if (jQuery.gameQuery.keyTracker[13] && posjump == 210)	{
 			jumpstat = 1;
+			//var audio = {};
+        	//audio["walk"] = new Audio();
+        	//audio["walk"].src = "jump.mp3";
+        	//audio["walk"].addEventListener('load', function () {
+            //	audio["walk"].play();
+            //});
+		}
+		
+		if (jumpstat > 0) {
+			jumpstat = jumpstat; // usado para paralizar o codigo durante o debug, para testes de pulo
 		}
 
 		if (jumpstat == 1)	{
@@ -343,25 +328,35 @@ $.playground().registerCallback(
 			$("#player").y(posjump);
 		}
 
-		if (posjump == 210) jumpstat = 0;
-		//--------------------------------------------------------------------------------------------------------------------
+		if (posjump >= 210){
+			jumpstat = 0;	
+			$("#player").y(210);
+		} 
+		
+		
+		
+//----------------------------------------------------------------------------------------------------------------------
+//------------------------------------- FIM DA LOGICA DO SALTO SOBRE AS BARREIRAS --------------------------------------
 
-			//ATUALIZA A COLISAO DAS BARREIRAS COM O CORREDOR
+//--------------------------------INICIO DA LOGICA DA COLISAO DAS BARREIRAS COM O CORREDOR -----------------------------
+//----------------------------------------------------------------------------------------------------------------------
 			$(".obstaculo").each(
 				function() {
 					this.obstaculo.update($("#player"));
-					var posx = $(this).x();
-					if ((posx + 100) < 0) {
+					//var posx = $(this).x();
+			        var posx = $(".obstaculo").x();
+					//if ((posx + 100) < 0) {
+					if (posx < 100) {
 						$(this).remove();
 						return;
-					}
-	
+			        }
+
 					//TESTE DE COLISOES
-					var collided = $(this).collision("#playerBody,." + $.gQ.groupCssClass);
-					if (collided.length > 0) {
-						if (jumpstat == 0) 	{// CASO ESTEJA PULANDO NAO QUEBRA A BARREIRA
+					var $collided = $(this).collision("#playerBody,." + $.gQ.groupCssClass);
+					if ($collided.length > 0) {
+						if (jumpstat == 0) 	{// CASO NAO ESTEJA PULANDO,  QUEBRA A BARREIRA
 							$(this).setAnimation(
-								obstaculos[0]["explode"], 
+								//obstaculos[0]["explode"], 
 								function(node) {
 									$(node).remove();
 								}
@@ -379,11 +374,11 @@ $.playground().registerCallback(
 						}
 					}
 					
-					var collided2 = $(this).collision("#player2Body,." + $.gQ.groupCssClass);
+					var $collided2 = $(this).collision("#player2Body,." + $.gQ.groupCssClass);
 	
-					if (collided2.length > 0) {
+					if ($collided2.length > 0) {
 						$(this).setAnimation(
-							obstaculos[0]["explode"], 
+							//obstaculos[0]["explode"], 
 							function(node) {
 								$(node).remove();
 							}
@@ -394,22 +389,31 @@ $.playground().registerCallback(
 						// E FORCADO A PERDER VELOCIDADE VOLTANDO 1 PONTO PARA ESQUERDA
 						nextpos2 = $("#player2").x() - 50;
 	
-						if (nextpos2 > 0) { // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A ESQUERDA
+						// MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A ESQUERDA
+						if (nextpos2 > 0) { 
 							$("#player2").x(nextpos2);
 						}
 					}
 				}
 			);
 		}
+		
+
+		//*************************  mostra valores de variaveis para teste ****************************************
+		$valorvar = nextpos2; // insira aqui o nome da variavel		
+		$("#overlay").append("<div id='mostravalordavariavel'style='color: blue; top: 40px; width: 100px; position: middle; font-family: verdana, sans-serif;'></div>");
+		$("#mostravalordavariavel").html($valorvar);
+		
 		//***************************************************  TRACKER *******************************************************
+
 		if (pos2 < 1000){
 		//******************************************* RECUPERACAO DO TRACKER P2 **********************************************
-				gravatracker[pos1,pos2] = $("#player").x();
-				$("#player2").x(carregatracker[pos1,pos2]);
+				$gravatracker[pos1,pos2] = $("#player").x();
+				$("#player2").x($carregatracker[pos1,pos2]);
 				pos2++;
-				gravatracker[pos1,pos2] = $("#player").y();
+				$gravatracker[pos1,pos2] = $("#player").y();
 				
-				$("#player2").y(carregatracker[pos1,pos2]);
+				$("#player2").y($carregatracker[pos1,pos2]);
 				pos2++;
 		//**********************************************************************************************************************
 			}else{
@@ -419,25 +423,26 @@ $.playground().registerCallback(
 	},	REFRESH_RATE
 );
 
-//------------ESTA FUNÇÃO TESTA SE É FIM DO JOGO E CRIA OBSTACULOS ALEATORIAMENTE ENQUANTO A CORRIDA NAO TIVER ACABADO------------
+//------------ESTA FUNÇÃO TESTA SE É FIM DO JOGO E CRIA OBSTACULOS ENQUANTO A CORRIDA NAO TIVER ACABADO------------
 	$.playground().registerCallback(
 		function() {
-			if (!gameOver) { // SE AINDA NÃO HOUVER VENCEDOR
+			if (!gameOver) {// SE AINDA NÃO HOUVER VENCEDOR
 				//if (Math.random() < 0.5) {
-				var name = "obstaculo1_" + Math.ceil(Math.random() * 1000);
-				$("#actors").addSprite(name, {animation: obstaculos[0]["idle"], posx: PLAYGROUND_WIDTH, posy: 235, width: 16, height: 64});
-				$("#" + name).addClass("obstaculo");
-				$("#" + name)[0].obstaculo = new barreira($("#" + name));
-				//}
-			} else { // SE UM DOS PLAYERS TIVER TERMIDADO A PARTIDA
+				var name = "obstaculo1_" + Math.ceil(Math.random() * 1000); //cria barreiras com nomes aleatorios
+				$("#actors").addSprite(name, {animation: obstaculos[0]["idle"], posx: PLAYGROUND_WIDTH, posy: 235, width: 16, height: 64});// configura a animacao e tamanho da barreira criada
+				$("#" + name).addClass("obstaculo"); //adiciona a barreira a classe obstaculo
+				$("#" + name)[0].obstaculo = new barreira($("#" + name)); //instancia a barreira criada como um obstaculo
+				//} 
+			} else { 
 				$("#playground").append('<div style="position: absolute; top: 50px; width: 570px; color: white; font-family: verdana, sans-serif;"><center><h1>Game Over</h1><br><a style="cursor: pointer;" id="restartbutton">FIM DE JOGO</a></center></div>');
-				$("#restartbutton").click(restartgame);
+				//$("#restartbutton").click(restartgame);
 
 				//Incluir uma partida com novo tracker
-				if (gravou == 0) {
-					$tracker = gravatracker;
+				if ($gravou == 0) {
+					$tracker = $gravatracker;
 					partida = {pontuacao:$premio,dataTracker:$tracker};
 					$.ajax({
+
 						dataType: "json",
 						url: "controllerInserePartida.php",
 						data: partida ,
@@ -453,15 +458,17 @@ $.playground().registerCallback(
 							console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown:'+errorThrown+"\nResponse:\n"+jqXHR.responseText);
 						},
 					});
-					gravou = 1;
+					$gravou = 1;
 				}
 			}
 		}, 2000	//UMA BARREIRA A CADA 2 SEGUNDOS 
+				
 	); 
 	
 //---------------------------------------------------ANIMAÇÃO DO CENARIO-----------------------------------------------------------
+	//TAMANHO TOTAL DO CENARIO:
 	$.playground().registerCallback(
-		function() {//TAMANHO TOTAL DO CENARIO:
+		function() {
 				var newPos = ($("#background1").x() - 4 - PLAYGROUND_WIDTH) % (1 * PLAYGROUND_WIDTH) + PLAYGROUND_WIDTH;
 				$("#background1").x(newPos);
 				newPos = ($("#background2").x() - 4 - PLAYGROUND_WIDTH) % (1 * PLAYGROUND_WIDTH);

@@ -40,6 +40,8 @@ include_once 'verificaSessao.php';
         <script src="resources/scripts/bootstrap.min.js"></script>
         <script src="resources/scripts/html5shim.js"></script>
         <script src="resources/scripts/respond.min.js"></script>
-        <script src="game1/gamequery.js"></script>
+        <script src="game1/jquery.gamequery.js"></script>
+        <script src="game1/jquery.gamequery.soundwrapper.soundmanager2.js"></script>
         <script src="game1/tutorial.js"></script>
+
     </head>
