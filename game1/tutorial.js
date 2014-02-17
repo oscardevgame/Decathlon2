@@ -37,12 +37,15 @@ var $gravou = 0;
 
 // // --------------------------------------VALIAVEIS PARA A MANIPULACAO E LEITURA DO TRACKER PARA PLAYER 2 VIRTUAL
 var $carregatracker = new Array();
-var carregou = 0;
+var $carregou = 0;
 
 // ------------------------------------------CONFIGURACAO DO SOM COM SOUND MANAGER
 
 soundManager.debugMode = false;
-// ---------------------------------------FUNCAO REINICIAR O JOGO - restartgame()
+var $playmusic = 1;
+
+
+// --------------------------------------
 
 // // ---------------------------------------OBJETOS DO JOGO
 function Player(node) {
@@ -51,11 +54,11 @@ function Player(node) {
 	this.corredor1 = 1;
 	this.respawnTime = -1;
 	this.update = 	function(){    	
-//						if ((this.respawnTime > 0) && (((new Date()).getTime() - this.respawnTime) > 3000)){
-//							this.grace = false;
-//							$(this.node).fadeTo(500, 1);
-//							this.respawnTime = -1;
-//						};
+						if ((this.respawnTime > 0) && (((new Date()).getTime() - this.respawnTime) > 3000)){
+							this.grace = false;
+							$(this.node).fadeTo(500, 1);
+							this.respawnTime = -1;
+						};
 					};
 	return true;
 };
@@ -83,10 +86,6 @@ function barreira(node) {
 
 barreira.prototype = new obstaculo();
 
-//barreira.prototype.updateY = 	function(playerNode){
-//									this.node.y(this.speedy - 1, true);
-//								};
-
 // --------------------------------------------------------------------------------------------------------------------
 // --                                      DECLARACAO PRINCIPAL                                                    --
 // --------------------------------------------------------------------------------------------------------------------
@@ -95,42 +94,46 @@ var $premio = 5000;
 
 // // -------------------------------------FUNCAO DO BOTAO INICIAR DO JOGO
 $(function(){
-	//var music = new $.gQ.SoundWrapper("music.mp3", true);
+
+	
 	$("#startbutton").click(function() {
 		$.playground().startGame(function() {
 			// Incluir uma partida com novo tracker
-			$("#welcomeScreen").fadeTo(1000, 0, function() {
-				
-					if ($gravatracker.length > 64)
-					{
-						for (i=0; i<$gravatracker.length; i++){
-							for (j=0; j<1000; j++){
-								$gravatracker.length[i,j] = 0;
+			if ($carregou == 0){
+				$("#welcomeScreen").fadeTo(1000, 0, function() {
+					
+						if ($gravatracker.length > 64)
+						{
+							for (i=0; i<$gravatracker.length; i++){
+								for (j=0; j<1000; j++){
+									$gravatracker.length[i,j] = 0;
+								}
 							}
+							window.location.reload();
 						}
-						window.location.reload();
-					}
-					partida={partidaId:$carregatracker}; //partida = {idUsuario:$trackerp2};
-					$.ajax({
-						dataType: "json",
-						url: "controllerRecuperaPartida.php",
-						data: partida ,
-						type: 'POST',
-						
-						sucess:
-						function(retorno, textStatus, jqXHR){
-							console.log("SUCESSO: \nretorno: " + retorno + "\ntext: " + textStatus + "\njqXHR: " + jqXHR);
-						},
-						
-						complete:
-							function( jqXHR, textStatus){
-							console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  jqXHR.responseText);
-						},
-						error: function(jqXHR, textStatus, errorThrown) {
-							console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
-						}
-					});
-   			});
+						partida={partidaId:$carregatracker}; //partida = {idUsuario:$trackerp2};
+						$.ajax({
+							dataType: "json",
+							url: "controllerRecuperaPartida.php",
+							data: partida ,
+							type: 'POST',
+							
+							sucess:
+							function(retorno, textStatus, jqXHR){
+								console.log("SUCESSO: \nretorno: " + retorno + "\ntext: " + textStatus + "\njqXHR: " + jqXHR);
+							},
+							
+							complete:
+								function( jqXHR, textStatus){
+								console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  jqXHR.responseText);
+							},
+							error: function(jqXHR, textStatus, errorThrown) {
+								console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
+							}
+						});
+	   			});
+	   			$carregou = 1;
+			}
 		});
 	});
 	
@@ -247,13 +250,6 @@ $("#player")[0].player = new Player($("#player"));
 $("#overlay").append("<div id='corredor1HUD'style='color: blue; bottom: 40px; width: 100px; right : 200px; position: absolute; font-family: verdana, sans-serif;'></div><div id='corredor2HUD'style='color: red; bottom: 40px; width: 100px; position: absolute; right: 50px; font-family: verdana, sans-serif;'></div>");
 $("#overlay").append('<div style="position: absolute; top: 0px; right: 20px; color: white; font-family: verdana, sans-serif;"><center><h1>PREMIO</h1><h1><a style="cursor: pointer; color: yellow;" id="mensagemcentral"></a></h1></center></div>');
 
-// ESTIPULA O TAMANHO DA BARRA DE CARREGAMENTO
-//$.loadCallback(
-//	function(percent) {
-	//	$("#loadingBar").width(500 * percent);
-//	}
-//);
-
 // ESTA E A FUNCAO QUE CONTROLA A MAIORIA DOS EVENTOS DO JOGO
 $.playground().registerCallback(
 	function() {
@@ -294,17 +290,21 @@ $.playground().registerCallback(
 				gameOver = true;
 			}
 		}
+
 //------------------------------------- LOGICA DO SALTO SOBRE AS BARREIRAS ---------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------
 
 		if (jQuery.gameQuery.keyTracker[13] && posjump == 210)	{
 			jumpstat = 1;
-			//var audio = {};
-        	//audio["walk"] = new Audio();
-        	//audio["walk"].src = "jump.mp3";
-        	//audio["walk"].addEventListener('load', function () {
-            //	audio["walk"].play();
-            //});
+			soundManager.createSound({
+				  id:'pulo',
+				  url:'game1/jump.wav',
+				  loops:1,
+				  autoLoad:true,
+				  onload:function() {
+				   		this.play();
+				  }
+			});	
 		}
 		
 		if (jumpstat > 0) {
@@ -427,15 +427,24 @@ $.playground().registerCallback(
 	$.playground().registerCallback(
 		function() {
 			if (!gameOver) {// SE AINDA NÃO HOUVER VENCEDOR
-				//if (Math.random() < 0.5) {
+				if ($playmusic == 1){
+					soundManager.createSound({
+						  id:'loopTest',
+						  url:'game1/music.mp3',
+						  loops:3,
+						  autoLoad:true,
+						  onload:function() {
+						   		this.play();
+						  }
+					});	
+					$playmusic = 0;
+				}
 				var name = "obstaculo1_" + Math.ceil(Math.random() * 1000); //cria barreiras com nomes aleatorios
 				$("#actors").addSprite(name, {animation: obstaculos[0]["idle"], posx: PLAYGROUND_WIDTH, posy: 235, width: 16, height: 64});// configura a animacao e tamanho da barreira criada
 				$("#" + name).addClass("obstaculo"); //adiciona a barreira a classe obstaculo
 				$("#" + name)[0].obstaculo = new barreira($("#" + name)); //instancia a barreira criada como um obstaculo
-				//} 
 			} else { 
 				$("#playground").append('<div style="position: absolute; top: 50px; width: 570px; color: white; font-family: verdana, sans-serif;"><center><h1>Game Over</h1><br><a style="cursor: pointer;" id="restartbutton">FIM DE JOGO</a></center></div>');
-				//$("#restartbutton").click(restartgame);
 
 				//Incluir uma partida com novo tracker
 				if ($gravou == 0) {
@@ -459,6 +468,7 @@ $.playground().registerCallback(
 						},
 					});
 					$gravou = 1;
+					$carregou = 0;
 				}
 			}
 		}, 2000	//UMA BARREIRA A CADA 2 SEGUNDOS 
