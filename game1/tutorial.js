@@ -99,7 +99,7 @@ $(function(){
 	$("#startbutton").click(function() {
 		$.playground().startGame(function() {
 			// Incluir uma partida com novo tracker
-			if ($carregou == 0){
+			if ($carregou === 0){
 				$("#welcomeScreen").fadeTo(1000, 0, function() {
 					
 						if ($gravatracker.length > 64)
@@ -257,18 +257,18 @@ $.playground().registerCallback(
 		//MOVIMENTO DO JOGADOR E PRESSIONAMENTO DE TECLAS
 		if (!playerHit) {
 			$("#player")[0].player.update();
-			if (jQuery.gameQuery.keyTracker[37] && jumpstat == 0) { // PRESSIONA BOTAO ESQUERDA(a)
+			if (jQuery.gameQuery.keyTracker[37] && jumpstat === 0) { // PRESSIONA BOTAO ESQUERDA(a)
 				teclas_apoio_p1 = 2;
-			} else if (jQuery.gameQuery.keyTracker[39] && jumpstat == 0) { // PRESSIONA BOTAO DIREITA(a)
+			} else if (jQuery.gameQuery.keyTracker[39] && jumpstat === 0) { // PRESSIONA BOTAO DIREITA(a)
 				teclas_apoio_p1--;
 			}
-			if (teclas_apoio_p1 == 1) { // VALIDA
+			if (teclas_apoio_p1 === 1) { // VALIDA
 				teclas_apoio_p1 = 0;
-				if ($tipotenis == 1 || $tipotenis == 4 || $tipotenis == 5) nextpos = $("#player").x() + 5; // CASO TIPO DE TENIS = 1,4 ou 5 (NORMAL)
-				if ($tipotenis == 2) nextpos = $("#player").x() + 6; // CASO TIPO DE TENIS = 2 (MAIS RAPIDO)
-				if ($tipotenis == 3) nextpos = $("#player").x() + 7; // CASO TIPO DE TENIS = 3 (MUITO MAIS RAPIDO E MAIS CARO TAMBEM)
-				if ($tiposuplemento == 2) nextpos = nextpos + 2; // CASO TIPO SUPLEMENTO = 2 (ADICIONA 2 PONTOS DE VELOCIDADE INDEPENDENTE DOS OUTROS ITENS COMPRADOS)
-				if ($tiposuplemento == 3) nextpos = nextpos + 3; // CASO TIPO SUPLEMENTO = 3 (ADICIONA 3 PONTOS DE VELOCIDADE INDEPENDENTE DOS OUTROS ITENS COMPRADOS)
+				if ($tipotenis === 1 || $tipotenis === 4 || $tipotenis === 5) nextpos = $("#player").x() + 5; // CASO TIPO DE TENIS = 1,4 ou 5 (NORMAL)
+				if ($tipotenis === 2) nextpos = $("#player").x() + 6; // CASO TIPO DE TENIS = 2 (MAIS RAPIDO)
+				if ($tipotenis === 3) nextpos = $("#player").x() + 7; // CASO TIPO DE TENIS = 3 (MUITO MAIS RAPIDO E MAIS CARO TAMBEM)
+				if ($tiposuplemento === 2) nextpos = nextpos + 2; // CASO TIPO SUPLEMENTO = 2 (ADICIONA 2 PONTOS DE VELOCIDADE INDEPENDENTE DOS OUTROS ITENS COMPRADOS)
+				if ($tiposuplemento === 3) nextpos = nextpos + 3; // CASO TIPO SUPLEMENTO = 3 (ADICIONA 3 PONTOS DE VELOCIDADE INDEPENDENTE DOS OUTROS ITENS COMPRADOS)
 				if (nextpos < PLAYGROUND_WIDTH) { // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A ESQUERDA
 					$("#player").x(nextpos);
 				}
@@ -294,7 +294,7 @@ $.playground().registerCallback(
 //------------------------------------- LOGICA DO SALTO SOBRE AS BARREIRAS ---------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------
 
-		if (jQuery.gameQuery.keyTracker[13] && posjump == 210)	{
+		if (jQuery.gameQuery.keyTracker[13] && posjump === 210)	{
 			jumpstat = 1;
 			soundManager.createSound({
 				  id:'pulo',
@@ -311,19 +311,19 @@ $.playground().registerCallback(
 			jumpstat = jumpstat; // usado para paralizar o codigo durante o debug, para testes de pulo
 		}
 
-		if (jumpstat == 1)	{
+		if (jumpstat === 1)	{
 			posjump = posjump - 3;
 			$("#player").y(posjump);
 		}
 
-		if ($tiposuplemento == 4)
+		if ($tiposuplemento === 4)
 		if (posjump < 150) jumpstat = 2; // CASO SUMPLEMENTO == 4 (PULOS MAIS ALTOS)
-		if ($tiposuplemento == 5)
+		if ($tiposuplemento === 5)
 		if (posjump < 140) jumpstat = 2; // CASO SUMPLEMENTO == 5 (PULOS AINDA MAIS ALTOS)
-		if ($tiposuplemento != 4 && $tiposuplemento != 5)
+		if ($tiposuplemento !== 4 && $tiposuplemento !== 5)
 		if (posjump < 170) jumpstat = 2; // CASO SUMPLEMENTO == 1 2 ou 3
 
-		if (jumpstat == 2)	{
+		if (jumpstat === 2)	{
 			posjump = posjump + 3;
 			$("#player").y(posjump);
 		}
@@ -354,7 +354,7 @@ $.playground().registerCallback(
 					//TESTE DE COLISOES
 					var $collided = $(this).collision("#playerBody,." + $.gQ.groupCssClass);
 					if ($collided.length > 0) {
-						if (jumpstat == 0) 	{// CASO NAO ESTEJA PULANDO,  QUEBRA A BARREIRA
+						if (jumpstat === 0) 	{// CASO NAO ESTEJA PULANDO,  QUEBRA A BARREIRA
 							$(this).setAnimation(
 								//obstaculos[0]["explode"], 
 								function(node) {
@@ -365,10 +365,10 @@ $.playground().registerCallback(
 							$(this).removeClass("obstaculo");
 						}// E FORCADO A PERDER VELOCIDADE VOLTANDO POSICOES PARA ESQUERDA
 	
-						if ($tipotenis != 4 && $tipotenis != 5 && jumpstat == 0) nextpos = $("#player").x() - 50; // CASO TIPO DE TENIS <> 4 (RESISTENCIA NORMAL)
-						if ($tipotenis == 4 && jumpstat == 0) nextpos = $("#player").x() - 25; // CASO TIPO DE TENIS == 4 (MAIOR RESISTENCIA ESTABILIDADE)
-						if ($tipotenis == 5 && jumpstat == 0) nextpos = $("#player").x() - 20; // CASO TIPO DE TENIS == 5 (SUPER RESISTENCIA A OBSTACULOS)
-						if (jumpstat == 0 && $premio > 0) $premio = $premio - 100; // perde 100 por colidir com a barreira
+						if ($tipotenis !== 4 && $tipotenis !== 5 && jumpstat === 0) nextpos = $("#player").x() - 50; // CASO TIPO DE TENIS <> 4 (RESISTENCIA NORMAL)
+						if ($tipotenis === 4 && jumpstat === 0) nextpos = $("#player").x() - 25; // CASO TIPO DE TENIS == 4 (MAIOR RESISTENCIA ESTABILIDADE)
+						if ($tipotenis === 5 && jumpstat === 0) nextpos = $("#player").x() - 20; // CASO TIPO DE TENIS == 5 (SUPER RESISTENCIA A OBSTACULOS)
+						if (jumpstat === 0 && $premio > 0) $premio = $premio - 100; // perde 100 por colidir com a barreira
 						if (nextpos > 0) { // MANTEM POSICAO DO JOGAR DENTRO DO CAMPO DO JOGO A ESQUERDA
 							$("#player").x(nextpos);
 						}
@@ -426,8 +426,8 @@ $.playground().registerCallback(
 //------------ESTA FUNÇÃO TESTA SE É FIM DO JOGO E CRIA OBSTACULOS ENQUANTO A CORRIDA NAO TIVER ACABADO------------
 	$.playground().registerCallback(
 		function() {
-			if (!gameOver) {// SE AINDA NÃO HOUVER VENCEDOR
-				if ($playmusic == 1){
+			if (!gameOver) {// SE AINDA N�O HOUVER VENCEDOR
+				if ($playmusic === 1){
 					soundManager.createSound({
 						  id:'loopTest',
 						  url:'game1/music.mp3',
@@ -447,7 +447,7 @@ $.playground().registerCallback(
 				$("#playground").append('<div style="position: absolute; top: 50px; width: 570px; color: white; font-family: verdana, sans-serif;"><center><h1>Game Over</h1><br><a style="cursor: pointer;" id="restartbutton">FIM DE JOGO</a></center></div>');
 
 				//Incluir uma partida com novo tracker
-				if ($gravou == 0) {
+				if ($gravou === 0) {
 					$tracker = $gravatracker;
 					partida = {pontuacao:$premio,dataTracker:$tracker};
 					$.ajax({
@@ -465,7 +465,7 @@ $.playground().registerCallback(
 						error:
 						function(jqXHR, textStatus, errorThrown) {
 							console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown:'+errorThrown+"\nResponse:\n"+jqXHR.responseText);
-						},
+						}
 					});
 					$gravou = 1;
 					$carregou = 0;

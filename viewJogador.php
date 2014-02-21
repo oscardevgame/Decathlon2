@@ -94,14 +94,12 @@ $listPartidasUsusario = $controllerPartidas->listPartidasPorUsuario($_SESSION["i
     </div>    
 </div>
 <div class="col-md-8 col-sm-8">
-    <div class="letter">
-        <div id="playground" style="width: 594px; height: 400px; background: black;">
-            <div id="welcomeScreen" style="width: 594px; height: 296px; position: absolute; z-index: 100; background-image: url(game1/logo.png); font-family: verdana, sans-serif;">
-                <div style="position: absolute; top: 120px; width: 594px; color: white;">
-                    <div id="loadingBar" style="position: relative; left: 100px; height: 15px; width: 0px; background: red;"></div>
-                </div>
+    <div id="playground" style="width: 594px; height: 400px; background: black;">
+        <div id="welcomeScreen" style="width: 594px; height: 296px; position: absolute; z-index: 100; background-image: url(game1/logo.png); font-family: verdana, sans-serif;">
+            <div style="position: absolute; top: 120px; width: 594px; color: white;">
+                <div id="loadingBar" style="position: relative; left: 100px; height: 15px; width: 0px; background: red;"></div>
             </div>
-	</div>    
-    </div>    
+        </div>
+    </div>       
 </div>
 <?php include_once 'templateBodyFooter.php'; ?>
