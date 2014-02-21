@@ -1,4 +1,4 @@
-﻿//-------------------------------DECATHLON 2 - CORRIDA DE 100 MTS------------PUC PR JOGOS SOCIAIS 2013/2014-------------------
+//-------------------------------DECATHLON 2 - CORRIDA DE 100 MTS------------PUC PR JOGOS SOCIAIS 2013/2014-------------------
 
 // -----------------------------------------DECLARACAO DAS VARIÁVEIS E CONFIGURAÇÕES INICIAIS
 
