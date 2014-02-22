@@ -15,22 +15,22 @@ $controllerItens = new itensController();
 $listItens = $controllerItens->listItensDisponiveis($_SESSION["idUsuario"]);
 $listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]);
 ?>
-<script> 
+<script>
   $(function(){
     var categoriasSelecionadas = new Array();
-    $.each($("td[name='categoriaUsuario']"), function(k,v){
+    $.each($('td[name="categoriaUsuario"]'), function(k,v){
         categoriasSelecionadas.push($(v).html());
     });
     
-    $("#formPedido").submit(function(){
+    $('#formPedido').submit(function(){
         $(this).find(':checkbox').attr("disabled",false);
     });
     
     $('#formPedido tr').click(function() {
-        var valorSel =$(this).find("td[name='valorLinha']").html();
-        var valorDisp=eval($("#valorDisponivel").html());
-        var valorTotal=eval($("#valorTotal").html());
-        var categoria = $(this).find("td[name='categoriaLinha']").html();
+        var valorSel =$(this).find('td[name="valorLinha"]').html();
+        var valorDisp=eval($('#valorDisponivel').html());
+        var valorTotal=eval($('#valorTotal').html());
+        var categoria = $(this).find('td[name="categoriaLinha"]').html();
         
         if ($(this).find(':checkbox').is(':checked')) {
             valorDisp = eval(valorDisp) + eval(valorSel);
@@ -39,22 +39,22 @@ $listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]
                 $(this).find(':checkbox').attr("disabled",false);
                 $(this).find(':checkbox').prop("checked",false);
                 $(this).find(':checkbox').attr("disabled",true);
-                $("#valorDisponivel").html(valorDisp);
-                $("#valorTotal").html(valorTotal);
+                $('#valorDisponivel').html(valorDisp);
+                $('#valorTotal').html(valorTotal);
                 if(categoriasSelecionadas.indexOf(categoria) !== -1){
                     categoriasSelecionadas.pop(categoria);
                 }
             }
         } else {
             if(categoriasSelecionadas.indexOf(categoria) !== -1){
-                alert("Permitido apenas 1 item por categoria!");
+                alert('Permitido apenas 1 item por categoria!');
                 return;
             }
             valorDisp = eval(valorDisp) - eval(valorSel);
             valorTotal = eval(valorTotal) + eval(valorSel);
             if(eval(valorDisp) >= 0){
-                $("#valorDisponivel").html(valorDisp);
-                $("#valorTotal").html(valorTotal);
+                $('#valorDisponivel').html(valorDisp);
+                $('#valorTotal').html(valorTotal);
                 $(this).find(':checkbox').attr("disabled",false);
                 $(this).find(':checkbox').prop("checked",true);
                 $(this).find(':checkbox').attr("disabled",true);
@@ -63,7 +63,7 @@ $listItensUsuario = $controllerItens->listItensPorUsuario($_SESSION["idUsuario"]
                 }
             } else {
                 if(eval(valorDisp) < 0){
-                    alert("Você não possui saldo suficiente!");
+                    alert('Você não possui saldo suficiente!');
                 }
             }
         }

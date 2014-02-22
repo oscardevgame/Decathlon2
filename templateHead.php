@@ -36,13 +36,11 @@ include_once 'verificaSessao.php';
         <link rel="shortcut icon" href="resources/images/decathlon.ico">
 
         <!-- JS -->
-        <script src="resources/scripts/jquery.js"></script>
+		<script src="game1/jquery-1.9.1.js"></script>
+		<script src="game1/jquery.session.js"></script>
         <script src="resources/scripts/bootstrap.min.js"></script>
         <script src="resources/scripts/html5shim.js"></script>
-        <script src="resources/scripts/respond.min.js"></script>
-        <script src="game1/gamequery.js"></script>
-        <script src="game1/soundmanager2.js"></script>
-        <script src="game1/jquery.gamequery.soundwrapper.soundmanager2-0.6.0.js"></script> 
-        <script src="game1/tutorial.js"></script>
+        <script src="resources/scripts/respond.min.js"></script> 
 
+        
     </head>
