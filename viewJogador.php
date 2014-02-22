@@ -144,23 +144,28 @@ include_once 'perfil_usuarioDAO.php';
 		$(function(){
 			$("#selectOptAmigo").change(function() {
 				var myselect = document.getElementById("selectOptAmigo");
-				var idAmigo = myselect.options[myselect.selectedIndex].value;
-				alert(idAmigo);
-				 
+                                var idAmigo = {idAmigo:myselect.options[myselect.selectedIndex].value};
+                         	//alert(idAmigo);
 				$.ajax({
 					dataType: "json",
-					url: "controllerRecuperaPartida.php",
+					url: "listarPartidasAmigoAjax.php",
 					data: idAmigo ,
 					type: 'POST',
 					 
 					sucess:
-					function(retorno, textStatus, jqXHR){
-						console.log("SUCESSO: \nretorno: " + retorno + "\ntext: " + textStatus + "\njqXHR: " + jqXHR);
+                                            function(retorno, textStatus, jqXHR){
+                                            console.log("SUCESSO: \nretorno: " + retorno + "\ntext: " + textStatus + "\njqXHR: " + jqXHR);
 					},
 					
 					complete:
-						function( jqXHR, textStatus){
-						console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  jqXHR.responseText);
+						function(jqXHR, textStatus){
+                                                console.log("COMPLETO: \ntext: " + textStatus + "\njqXHR: " +  $.parseJSON(jqXHR.responseText));                                    
+                                                var retorno = jqXHR.responseText;
+                                                alert(retorno);
+                                                $.each( retorno, function( key, value ) {
+                                                    console.log( key + ": " + value.data );
+                                                });
+                                                
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.log('Erro no processamento Ajax.\nTextStatus: '+textStatus+'\nerrorThrown: '+errorThrown+"\nResponse:\n"+jqXHR.responseText);
@@ -363,12 +368,7 @@ include_once 'perfil_usuarioDAO.php';
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($listPartidasUsusarioAmigo as $key => $value) { ?>
-                        <tr>
-                            <td><?php echo $value->getData() ?></td>
-                            <td><?php echo $value->getPontuacao() ?></td>
-                        </tr>
-                    <?php } ?>
+                     
                     </tbody>
                 </table>
             </div>
