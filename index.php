@@ -9,24 +9,53 @@ $navLinks = array();
 
 include_once 'templateHead.php';
 include_once 'templateBodyHeaderContainer.php';
+
+
+//PARTE DO FACEBOOK
+// Faz o include do arquivo
+require 'fb-php-sdk/facebook.php';
+// Veja as informaï¿½ï¿½es a seguir nas configuraï¿½ï¿½es do aplicativo.
+$app_id = '590156727665450';
+$app_secret = '02931210c5903b3616c62d42fb7aad4c';
+$app_url = 'http:apps.facebook.com/testeprototipo' . $app_namespace = 'testeprototipo';
+// Quais sï¿½o as aï¿½ï¿½es que o aplicativo pode realizar
+$scope = 'email,publish_actions';
+//Inicializa o Facebook
+$facebook = new Facebook(array(
+		'appId' => $app_id,
+		'secret' => $app_secret,
+));
+
+$user = $facebook->getUser();
+ 
+if(!$user){
+	$loginUrl = $facebook->getLoginUrl(array(
+			'scope'=> $scope,
+			'redirect_url' => $app_url,
+	));
+	print('<script> top.location.href=\'' . $loginUrl . '\'</script>');
+}
+//FIM PARTE DO FACEBOOK
+
+
 ?>
 <div class="col-md-7 col-sm-7">
     <div class="intro">
         <h1>Jogo</h1>
-        <p>Jogue o Remake do Decathlon, disponível em sua rede social. 
-            Com vários itens de ação, seu jogo se tornará¡ especial. 
-            Utilize-os da melhor forma possível.
-            Tome cuidado com os obstáculos no percurso, seja cauteloso em suas jogadas.
+        <p>Jogue o Remake do Decathlon, disponï¿½vel em sua rede social. 
+            Com vï¿½rios itens de aï¿½ï¿½o, seu jogo se tornarï¿½ especial. 
+            Utilize-os da melhor forma possï¿½vel.
+            Tome cuidado com os obstï¿½culos no percurso, seja cauteloso em suas jogadas.
             Evolua sua categoria.
         </p>
         <h1>Power Up's</h1>
-        <p>Utilize sua pontuação para adquirir itens como roupas e tênis que aumentarão
-            sua performance. Itens de ótima qualidade de nossos patrocinadores.
+        <p>Utilize sua pontuaï¿½ï¿½o para adquirir itens como roupas e tï¿½nis que aumentarï¿½o
+            sua performance. Itens de ï¿½tima qualidade de nossos patrocinadores.
         </p>
-        <h1>Mecânica</h1>
+        <h1>Mecï¿½nica</h1>
         <p>
             Usando teclado, setas direita/esquerda (mouse) o jogador mexe cada perna.
-            Corre 5 vezes e deve recuperar o fôlego durante um intervalo de 30 minutos.
+            Corre 5 vezes e deve recuperar o fï¿½lego durante um intervalo de 30 minutos.
             O clima interfere no corrida.
         </p>
     </div>
@@ -36,7 +65,7 @@ include_once 'templateBodyHeaderContainer.php';
         <div class="letter">
             <h3>Interatividade</h3>
             <p>Notifique seus amigos quando houver troca de categoria.
-                Alerte seu grupo que estão torcendo por um corredor.
+                Alerte seu grupo que estï¿½o torcendo por um corredor.
                 Corra com seus amigos e avise quando ultrapassou sua marca.
             </p>
         </div>
@@ -58,4 +87,23 @@ include_once 'templateBodyHeaderContainer.php';
         </div>
     </div>
 </div>
+<div id="fb-root"></div>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : 590156727665450,
+          status     : true,
+          xfbml      : true,
+          cookie	 : true
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/all.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
 <?php include_once 'templateBodyFooter.php'; ?>

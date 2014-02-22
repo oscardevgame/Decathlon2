@@ -276,5 +276,61 @@ class perfil_usuarioDAO{
                 return null;
             }
         }
+        
+        public function ObterPorFacebook($face){
+        
+        	try {
+        		# Faz conex�o
+        		$conexao = new conexaoBanco();
+        		$conexao->conectar();
+        
+        		# Executa comando SQL
+        		$stmt = $conexao->pdo->prepare('SELECT up.id_usuario_perfil, u.id_usuario, u.email, u.nome, u.senha, u.facebook, u.path_file_foto, p.id_perfil, p.descricao FROM perfil_usuario up, perfis p, usuarios u WHERE up.id_perfil = p.id_perfil and up.id_usuario = u.id_usuario and u.facebook = ?');
+        		# Passando os valores a serem usados
+        		$dados = array($face);
+        		$stmt->execute($dados);
+        
+        		$retorno = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        		if(! $retorno){
+        		echo '<br/>';
+        		print_r($stmt->errorInfo());
+        		echo "<br/>";
+        		$stmt->debugDumpParams();
+        		echo '<br/>';
+        		}
+        
+        		$lista = array();
+        		$i = 0;
+        
+        		$dado;
+        		foreach( $retorno as $row ){
+        		$dado = $row['id_usuario'];
+        				
+        				#Instancia da entidade
+        				/*$perfil_usuarioBE = new perfil_usuarioBE();
+        				$usuariosBE = new usuariosBE();
+        				$perfisBE = new perfisBE();
+        
+        					#Atribui valores
+        							$perfil_usuarioBE->setId_usuario_perfil($row['id_usuario_perfil']);
+        
+        							$usuariosBE->setId_usuario($row['id_usuario']);
+        							$usuariosBE->setEmail($row['email']);
+        							$usuariosBE->setNome($row['nome']);
+        							$usuariosBE->setSenha($row['senha']);
+        							$usuariosBE->setFacebook($row['facebook']);
+        							$usuariosBE->setPath_file_foto($row['path_file_foto']);
+        
+        							$i++;
+						 */
+				
+				}
+        
+        				} catch (Exception $exc) {
+        				echo $exc->getTraceAsString();
+        				}
+        		return $dado;
+        }
 }
 ?>

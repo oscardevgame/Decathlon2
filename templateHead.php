@@ -41,6 +41,4 @@ include_once 'verificaSessao.php';
         <script src="resources/scripts/bootstrap.min.js"></script>
         <script src="resources/scripts/html5shim.js"></script>
         <script src="resources/scripts/respond.min.js"></script> 
-
-        
     </head>

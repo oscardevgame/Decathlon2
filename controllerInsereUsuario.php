@@ -1,6 +1,8 @@
 <?php
-include_once 'verificaSessao.php';
 
+if (session_status() != PHP_SESSION_ACTIVE) {
+    session_start();
+}
 include_once 'usuariosBE.php';
 include_once 'perfisBE.php';
 include_once 'perfil_usuarioBE.php';
@@ -8,41 +10,70 @@ include_once 'usuariosDAO.php';
 include_once 'perfisDAO.php';
 include_once 'perfil_usuarioDAO.php';
 
+
+
 $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 $nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_STRING);
 $senha = filter_input(INPUT_POST, 'senha');
 $senhaConfirm = filter_input(INPUT_POST, 'senhaConfirm');
-$facebook = filter_input(INPUT_POST, 'facebook');
+//$facebook = filter_input(INPUT_POST, 'facebook');
 
-$senha = trim($senha);
-if (empty($senha)) {
-    $message = "O campo senha é obrigatório!";
+require 'fb-php-sdk/facebook.php';
+// Veja as informaï¿½ï¿½es a seguir nas configuraï¿½ï¿½es do aplicativo.
+$app_id = '590156727665450';
+$app_secret = '02931210c5903b3616c62d42fb7aad4c';
+$app_url = 'http:apps.facebook.com/testeprototipo' . $app_namespace = 'testeprototipo';
+// Quais sï¿½o as aï¿½ï¿½es que o aplicativo pode realizar
+$scope = 'email,publish_actions';
+//Inicializa o Facebook
+$facebook = new Facebook(array(
+	'appId' => $app_id,
+	'secret' => $app_secret,
+));
+
+$user = $facebook->getUser();
+   
+   if(!$user){
+		$loginUrl = $facebook->getLoginUrl(array(
+		'scope'=> $scope,
+		'redirect_url' => $app_url,
+		));
+		print('<script> top.location.href=\'' . $loginUrl . '\'</script>');
+   }
+
+
+$facebook = $user;
+
+if (empty(trim($senha))) {
+    $message = "O campo senha ï¿½ obrigatï¿½rio!";
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
     header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
     return;
 }
 
-$nome = trim($nome);
-if (empty($nome)) {
-    $message = "O campo nome é obrigatório!";
+if (empty(trim($nome))) {
+    $message = "O campo nome ï¿½ obrigatï¿½rio!";
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
     header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
     return;
 }
 
-$email = trim($email);
-if (empty($email)) {
-    $message = "O campo nome é obrigatório!";
+if (empty(trim($email))) {
+    $message = "O campo nome ï¿½ obrigatï¿½rio!";
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
     header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
     return;
 }
 
 if ($senha != $senhaConfirm) {
-    $message = "Senhas informadas estão diferentes!";
+    $message = "Senhas informadas estï¿½o diferentes!";
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
     header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
     return;
+}
+
+if ($senha != $senhaConfirm) {
+	
 }
 
 $usuarioNovo = new usuariosBE();
@@ -119,7 +150,7 @@ $usuario = new usuariosBE();
 $usuario = $usuarioDAO->ObterPorEmail($email);
 
 if ($usuario->getId_usuario() > 0) {
-    $message = "Já existe usuário para o e-mail:$email";
+    $message = "Jï¿½ existe usuï¿½rio para o e-mail:$email";
     $_SESSION["mensagens"] = array_merge($_SESSION["mensagens"], array("$message" => "a"));
     header("Location: " . filter_input(INPUT_SERVER, 'HTTP_REFERER'));
     return;

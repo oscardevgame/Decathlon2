@@ -1,5 +1,7 @@
 //-------------------------------DECATHLON 2 - CORRIDA DE 100 MTS------------PUC PR JOGOS SOCIAIS 2013/2014-------------------
 
+
+
 // -----------------------------------------DECLARACAO DAS VARIÁVEIS E CONFIGURAÇÕES INICIAIS
 
 // //---------------------------------------CONFIGURAÇÃO DO LAYOUT (CONSTANTES)
@@ -155,7 +157,7 @@ playerAnimation["PLAYER2CORRE"] = new $.gQ.Animation({imageURL: "game1/competido
 
 // SUBSTITUIR PELO ITENS DA SESSION
 
-var $nomejogador = "x";	//request.getSession().getAttribute("nome"); //DEFINIDO NA CHAMADA DO AJAX
+var $nomejogador = $.session.get("j_nome");;	//request.getSession().getAttribute("nome"); //DEFINIDO NA CHAMADA DO AJAX
 var $nomejogadorcpu = "Player 2"; // SUBSTITUIR PELO DA BASE DE DADOS
 //var $usuario = "Usuario"; // SUBSTITUIR PELO DA BASE DE DADOS
 //var $ultimaposicao = 1; // SUBSTITUIR PELO DA BASE DE DADOS
@@ -170,7 +172,8 @@ switch  ($idcamisa)
 	case "#2":	$corcamisa = 2;	break; //Database 'dbdecathlon.itens' {"id_itens": 2,"descricao": "Camisa Amarela","valor": 0,"categoria": "camisa","path_image_item": "game1/camisa2.png"},
 	case "#3":	$corcamisa = 3;	break; //Database 'dbdecathlon.itens' {"id_itens": 3,"descricao": "Camisa Azul","valor": 0,"categoria": "camisa","path_image_item": "game1/camisa3.png"},
 	case "#4":	$corcamisa = 4;	break; //Database 'dbdecathlon.itens' {"id_itens": 4,"descricao": "Camisa Verde","valor": 0,"categoria": "camisa","path_image_item": "game1/camisa4.png"},
-	case "#5":	$corcamisa = 5;	break; //Database 'dbdecathlon.itens' {"id_itens": 5,"descricao": "Camisa Rosa","valor": 0,"categoria": "camisa","path_image_item": "game1/camisa5.png"},	
+	case "#5":	$corcamisa = 5;	break; //Database 'dbdecathlon.itens' {"id_itens": 5,"descricao": "Camisa Rosa","valor": 0,"categoria": "camisa","path_image_item": "game1/camisa5.png"},
+	default: $corcamisa = 1;	
 };
 
 var $idtipotenis = $.session.get("j_tipotenis");  // ID 6 a 10 CATEGORIA TENIS (ID SELECIONADO PARA ESTA CORRIDA)
@@ -180,7 +183,8 @@ switch  ($idtipotenis)
 	case "#7":	$tipotenis = 2; break; //Database 'dbdecathlon.itens' {"id_itens": 7,"descricao": "Tenis Veloz","valor": 2000,"categoria": "tenis","path_image_item": "game1/tipotenis2.png"}, 
 	case "#8":	$tipotenis = 3; break; //Database 'dbdecathlon.itens' {"id_itens": 8,"descricao": "Tenis Hiper-veloz","valor": 5000,"categoria": "tenis","path_image_item": "game1/tipotenis3.png"}, 
 	case "#9":	$tipotenis = 4; break; //Database 'dbdecathlon.itens' {"id_itens": 9,"descricao": "Tenis Aderente","valor": 7000,"categoria": "tenis","path_image_item": "game1/tipotenis4.png"}, 
-	case "#10": $tipotenis = 5; break;  //Database 'dbdecathlon.itens' {"id_itens": 10,"descricao": "Tenis Hiper-aderente","valor": 10000,"categoria": "tenis","path_image_item": "game1/tipotenis5.png"},    	
+	case "#10": $tipotenis = 5; break;  //Database 'dbdecathlon.itens' {"id_itens": 10,"descricao": "Tenis Hiper-aderente","valor": 10000,"categoria": "tenis","path_image_item": "game1/tipotenis5.png"},
+	default: $tipotenis = 1;    	
 };
 
 var $idsuplemento = $.session.get("j_suplemento");  // ID 11 a 15 CATEGORIA SUPLEMENTO (ID SELECIONADO PARA ESTA CORRIDA)
@@ -191,6 +195,7 @@ switch  ($idsuplemento)
 	case "#13":	$tiposuplemento = 3; break; //Database 'dbdecathlon.itens' {"id_itens": 13,"descricao": "Energético","valor": 7000,"categoria": "suplemento","path_image_item": "game1/suplemento3.png"}, 
 	case "#14":	$tiposuplemento = 4; break; //Database 'dbdecathlon.itens' {"id_itens": 14,"descricao": "Feijão mexicano","valor": 10000,"categoria": "suplemento","path_image_item": "game1/suplemento4.png"},
 	case "#15":	$tiposuplemento = 5; break; //Database 'dbdecathlon.itens' {"id_itens": 15,"descricao": "Anabolizante","valor": 15000,"categoria": "suplemento","path_image_item": "game1/suplemento5.png"},
+	default: $tiposuplemento = 1;
 };
 
 var $idtrapaca = $.session.get("j_trapaca");  // ID 16 a 20 CATEGORIA TRAPAÇA (ID SELECIONADO PARA ESTA CORRIDA)
@@ -201,6 +206,7 @@ switch  ($idtrapaca)
 	case "#18":	$tipotrapaca = 3; break; //Database 'dbdecathlon.itens' {"id_itens": 18,"descricao": "Rouba trapaça","valor": 20000,"categoria": "trapaca","path_image_item": "game1/tipotrapaca3.png"}, 
 	case "#19":	$tipotrapaca = 4; break; //Database 'dbdecathlon.itens' {"id_itens": 19,"descricao": "Desliza","valor": 20000,"categoria": "trapaca","path_image_item": "game1/tipotrapaca4.png"},
 	case "#20":	$tipotrapaca = 5; break; //Database 'dbdecathlon.itens' {"id_itens": 20,"descricao": "Cria barreira","valor": 30000,"categoria": "trapaca","path_image_item": "game1/tipotrapaca5.png"}]
+	default: $tipotrapaca = 1;
 };
 
 /*--------------------------------------------------------------------------------------------------------------------------*/
@@ -309,7 +315,7 @@ $.playground().registerCallback(
 		}
 		
 		if (jumpstat > 0) {
-			jumpstat = jumpstat; // usado para paralizar o codigo durante o debug, para testes de pulo
+		//	jumpstat = jumpstat; // usado para paralizar o codigo durante o debug, para testes de pulo
 		}
 
 		if (jumpstat === 1)	{
@@ -401,7 +407,7 @@ $.playground().registerCallback(
 		
 
 		//*************************  mostra valores de variaveis para teste ****************************************
-		$valorvar = nextpos2; // insira aqui o nome da variavel		
+		$valorvar = "..."; // insira aqui o nome da variavel		
 		$("#overlay").append("<div id='mostravalordavariavel'style='color: blue; top: 40px; width: 100px; position: middle; font-family: verdana, sans-serif;'></div>");
 		$("#mostravalordavariavel").html($valorvar);
 		
@@ -427,6 +433,7 @@ $.playground().registerCallback(
 //------------ESTA FUNÇÃO TESTA SE É FIM DO JOGO E CRIA OBSTACULOS ENQUANTO A CORRIDA NAO TIVER ACABADO------------
 	$.playground().registerCallback(
 		function() {
+
 			if (!gameOver) {// SE AINDA N�O HOUVER VENCEDOR
 				if ($playmusic === 1){
 					soundManager.createSound({
